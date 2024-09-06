@@ -51,7 +51,8 @@ export default function UploadFile({
 
   // Don't spam fetchKeys, wait 1s between calls at least.
   const handleUploadSuccess = () => {
-    debounce(() => fetchKeys(true), 1000); setYearSubmitted(false);
+    debounce(() => fetchKeys(true), 1000);
+    setYearSubmitted(false);
     setShowDropModal(false);
   }
   const handleUploadError = (_msg) => null; // stubbed.
