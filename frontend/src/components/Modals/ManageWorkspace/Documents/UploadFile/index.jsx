@@ -20,9 +20,8 @@ export default function UploadFile({
   const [files, setFiles] = useState([]);
   const [fetchingUrl, setFetchingUrl] = useState(false);
   const [year, setYear] = useState("");
+  const [yearSubmitted, setYearSubmitted] = useState(false);
   const [showModal, setShowModal] = useState(false);
-  const [dragFiles, setDragFiles] = useState([]);
-  const [manualSelection, setManualSelection] = useState(false);
   const fileInputRef = useRef(null);
 
   const { t } = useTranslation();
@@ -58,28 +57,25 @@ export default function UploadFile({
   const handleUploadError = (_msg) => null;
 
   const onDrop = async (acceptedFiles, rejections) => {
-    setShowModal(true);
-    const newAccepted = acceptedFiles.map((file) => {
-      return {
-        uid: v4(),
-        file,
-      };
-    });
-    const newRejected = rejections.map((file) => {
-      return {
-        uid: v4(),
-        file: file.file,
-        rejected: true,
-        reason: file.errors[0].code,
-      };
-    });
-    if (manualSelection) {
-      setShowModal(false);
-      setManualSelection(false);
-      setFiles([...newAccepted, ...newRejected]);
-    } else {
+    if (!yearSubmitted) {
       setShowModal(true);
-      setDragFiles([...newAccepted, ...newRejected]);
+    } else {
+      setShowModal(false);
+      const newAccepted = acceptedFiles.map((file) => {
+        return {
+          uid: v4(),
+          file,
+        };
+      });
+      const newRejected = rejections.map((file) => {
+        return {
+          uid: v4(),
+          file: file.file,
+          rejected: true,
+          reason: file.errors[0].code,
+        };
+      });
+      setFiles([...newAccepted, ...newRejected]);
     }
   };
 
@@ -133,13 +129,35 @@ export default function UploadFile({
     }
   }, [files, dragFiles]);
 
+  const handleYearSubmit = () => {
+    const yearNum = parseInt(year, 10);
+    if (year && year.length === 4 && yearNum > 2000 && !isNaN(yearNum)) {
+      setYearSubmitted(true);
+      setShowModal(false);
+      showToast(
+        `Year ${year} submitted. You can now upload a file.`,
+        "success"
+      );
+      setYear("");
+      fileInputRef.current.click(); // Trigger the file input click
+    } else {
+      showToast("Please enter a valid 4-digit year greater than 2000", "error");
+    }
+  };
+
+  const handleYearCancel = () => {
+    setShowModal(false);
+    setYear("");
+    setYearSubmitted(false);
+  };
+
   return (
     <div className="flex flex-col items-center">
       <div
         className={`w-[280px] border-2 border-dashed rounded-2xl bg-zinc-900/50 p-3 ${ready ? "cursor-pointer" : "cursor-not-allowed"
           } hover:bg-zinc-900/90`}
         {...getRootProps()}
-        onClick={modalClick}
+        onClick={() => setShowModal(true)}
         style={{ minWidth: !isUploadedDoc ? "41.3rem" : "3rem" }}
       >
         <input {...getInputProps()} ref={fileInputRef} />
