@@ -22,6 +22,7 @@ export default function UploadFile({
   const [year, setYear] = useState("");
   const [yearSubmitted, setYearSubmitted] = useState(false);
   const [showModal, setShowModal] = useState(false);
+  const [showDropModal, setShowDropModal] = useState(false);
   const fileInputRef = useRef(null);
 
   const { t } = useTranslation();
@@ -49,14 +50,15 @@ export default function UploadFile({
   };
 
   // Don't spam fetchKeys, wait 1s between calls at least.
-  const handleUploadSuccess = debounce(() => fetchKeys(true), 1000);
+  const handleUploadSuccess = () => {
+    debounce(() => fetchKeys(true), 1000); setYearSubmitted(false);
+    setShowDropModal(false);
+  }
   const handleUploadError = (_msg) => null; // stubbed.
 
   const onDrop = async (acceptedFiles, rejections) => {
     if (!yearSubmitted) {
-      setShowModal(true);
-    } else {
-      setShowModal(false);
+      setShowDropModal(true);
       const newAccepted = acceptedFiles.map((file) => {
         return {
           uid: v4(),
@@ -71,6 +73,25 @@ export default function UploadFile({
           reason: file.errors[0].code,
         };
       });
+      setYearSubmitted(false);
+      setFiles([...newAccepted, ...newRejected]);
+    } else {
+      setShowDropModal(false);
+      const newAccepted = acceptedFiles.map((file) => {
+        return {
+          uid: v4(),
+          file,
+        };
+      });
+      const newRejected = rejections.map((file) => {
+        return {
+          uid: v4(),
+          file: file.file,
+          rejected: true,
+          reason: file.errors[0].code,
+        };
+      });
+      setYearSubmitted(false);
       setFiles([...newAccepted, ...newRejected]);
     }
   };
@@ -87,7 +108,20 @@ export default function UploadFile({
     onDrop,
     disabled: !ready,
   });
-
+  const handleDropYearSubmit = () => {
+    const yearNum = parseInt(year, 10);
+    if (year && year.length === 4 && yearNum > 2000 && !isNaN(yearNum)) {
+      setYearSubmitted(true);
+      setShowDropModal(false);
+      showToast(
+        `Year ${year} submitted. You can now upload a file.`,
+        "success"
+      );
+      setYear("");
+    } else {
+      showToast("Please enter a valid 4-digit year greater than 2000", "error");
+    }
+  }
   const handleYearSubmit = () => {
     const yearNum = parseInt(year, 10);
     if (year && year.length === 4 && yearNum > 2000 && !isNaN(yearNum)) {
@@ -104,6 +138,11 @@ export default function UploadFile({
     }
   };
 
+  const handleDropYearCancel = () => {
+    setShowDropModal(false);
+    setYear("");
+    setYearSubmitted(false);
+  };
   const handleYearCancel = () => {
     setShowModal(false);
     setYear("");
@@ -163,7 +202,39 @@ export default function UploadFile({
           </div>
         )}
       </div>
-
+      {showDropModal && (
+        <div className="fixed w-full h-full z-30 inset-0 bg-black bg-opacity-75 flex items-center justify-center">
+          <div
+            className="bg-zinc-800 rounded-lg p-6 w-[400px] border border-gray-500"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <h2 className="text-white text-lg font-semibold mb-4">
+              Upload by year
+            </h2>
+            <input
+              type="number"
+              placeholder="Enter Year (e.g., 2024)"
+              value={year}
+              onChange={(e) => setYear(e.target.value)}
+              className="disabled:bg-zinc-600 disabled:text-slate-300 bg-zinc-900 text-white placeholder:text-white/20 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+            />
+            <div className="flex justify-end mt-6 space-x-3">
+              <button
+                onClick={handleDropYearSubmit}
+                className="px-4 py-2 text-white hover:bg-switch-selected hover:bg-opacity-60 bg-switch-selected shadow-md rounded-lg"
+              >
+                Submit
+              </button>
+              <button
+                onClick={handleDropYearCancel}
+                className="px-4 py-2 text-white bg-zinc-900 shadow-md rounded-lg hover:bg-opacity-60"
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
       {showModal && (
         <div className="fixed w-full h-full z-30 inset-0 bg-black bg-opacity-75 flex items-center justify-center">
           <div
