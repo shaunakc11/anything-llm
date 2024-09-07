@@ -80,6 +80,8 @@ export default function UploadFile({
     } else {
       setShowModal(true);
       setDragFiles([...newAccepted, ...newRejected]);
+      setShowModal(true);
+      setDragFiles([...newAccepted, ...newRejected]);
     }
   };
 
@@ -125,7 +127,6 @@ export default function UploadFile({
     setShowModal(false);
     setManualSelection(false);
     setYear("");
-    setManualSelection(false);
   };
 
   useEffect(() => {
