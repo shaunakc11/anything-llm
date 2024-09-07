@@ -20,9 +20,9 @@ export default function UploadFile({
   const [files, setFiles] = useState([]);
   const [fetchingUrl, setFetchingUrl] = useState(false);
   const [year, setYear] = useState("");
-  const [yearSubmitted, setYearSubmitted] = useState(false);
   const [showModal, setShowModal] = useState(false);
-  const [showDropModal, setShowDropModal] = useState(false);
+  const [dragFiles, setDragFiles] = useState([]);
+  const [manualSelection, setManualSelection] = useState(false);
   const fileInputRef = useRef(null);
 
   const { t } = useTranslation();
@@ -52,49 +52,36 @@ export default function UploadFile({
   // Don't spam fetchKeys, wait 1s between calls at least.
   const handleUploadSuccess = () => {
     debounce(() => fetchKeys(true), 1000);
-    setYearSubmitted(false);
-    setShowDropModal(false);
-  }
-  const handleUploadError = (_msg) => null; // stubbed.
+    setShowModal(false);
+    setYear("")
+  };
+  const handleUploadError = (_msg) => null;
 
   const onDrop = async (acceptedFiles, rejections) => {
-    if (!yearSubmitted) {
-      setShowDropModal(true);
-      const newAccepted = acceptedFiles.map((file) => {
-        return {
-          uid: v4(),
-          file,
-        };
-      });
-      const newRejected = rejections.map((file) => {
-        return {
-          uid: v4(),
-          file: file.file,
-          rejected: true,
-          reason: file.errors[0].code,
-        };
-      });
-      setYearSubmitted(false);
+    setShowModal(true);
+    const newAccepted = acceptedFiles.map((file) => {
+      return {
+        uid: v4(),
+        file,
+      };
+    });
+    const newRejected = rejections.map((file) => {
+      return {
+        uid: v4(),
+        file: file.file,
+        rejected: true,
+        reason: file.errors[0].code,
+      };
+    });
+    if (manualSelection) {
+      setShowModal(false);
+      setManualSelection(false);
       setFiles([...newAccepted, ...newRejected]);
     } else {
-      setShowDropModal(false);
-      const newAccepted = acceptedFiles.map((file) => {
-        return {
-          uid: v4(),
-          file,
-        };
-      });
-      const newRejected = rejections.map((file) => {
-        return {
-          uid: v4(),
-          file: file.file,
-          rejected: true,
-          reason: file.errors[0].code,
-        };
-      });
-      setYearSubmitted(false);
-      setFiles([...newAccepted, ...newRejected]);
+      setShowModal(true);
+      setDragFiles([...newAccepted, ...newRejected]);
     }
+
   };
 
   useEffect(() => {
@@ -109,46 +96,42 @@ export default function UploadFile({
     onDrop,
     disabled: !ready,
   });
-  const handleDropYearSubmit = () => {
-    const yearNum = parseInt(year, 10);
-    if (year && year.length === 4 && yearNum > 2000 && !isNaN(yearNum)) {
-      setYearSubmitted(true);
-      setShowDropModal(false);
-      showToast(
-        `Year ${year} submitted. You can now upload a file.`,
-        "success"
-      );
-      setYear("");
-    } else {
-      showToast("Please enter a valid 4-digit year greater than 2000", "error");
-    }
-  }
   const handleYearSubmit = () => {
     const yearNum = parseInt(year, 10);
     if (year && year.length === 4 && yearNum > 2000 && !isNaN(yearNum)) {
-      setYearSubmitted(true);
       setShowModal(false);
+      if (!manualSelection) {
+        setFiles((prevFiles) => [...prevFiles, ...dragFiles]);
+      }
       showToast(
         `Year ${year} submitted. You can now upload a file.`,
         "success"
       );
-      setYear("");
-      fileInputRef.current.click(); // Trigger the file input click
+      setDragFiles([]);
+      if (manualSelection) {
+        fileInputRef.current.click();
+      }
     } else {
       showToast("Please enter a valid 4-digit year greater than 2000", "error");
     }
   };
 
-  const handleDropYearCancel = () => {
-    setShowDropModal(false);
-    setYear("");
-    setYearSubmitted(false);
+  const modalClick = () => {
+    setManualSelection(true);
+    setShowModal(true);
   };
+
   const handleYearCancel = () => {
     setShowModal(false);
+    setManualSelection(false);
     setYear("");
-    setYearSubmitted(false);
   };
+
+  useEffect(() => {
+    if (files.length > 0 || dragFiles.length > 0) {
+      fileInputRef.current.value = "";
+    }
+  }, [files, dragFiles]);
 
   return (
     <div
@@ -159,7 +142,7 @@ export default function UploadFile({
         className={`w-[280px] border-2 border-dashed rounded-2xl bg-zinc-900/50 p-3 ${ready ? "cursor-pointer" : "cursor-not-allowed"
           } hover:bg-zinc-900/90`}
         {...getRootProps()}
-        onClick={() => setShowModal(true)}
+        onClick={modalClick}
         style={{ minWidth: !isUploadedDoc ? "41.3rem" : "3rem" }}
       >
         <input {...getInputProps()} ref={fileInputRef} />
@@ -188,6 +171,7 @@ export default function UploadFile({
             {files.map((file) => (
               <FileUploadProgress
                 key={file.uid}
+                year={year}
                 file={file.file}
                 uuid={file.uid}
                 setFiles={setFiles}
@@ -203,39 +187,6 @@ export default function UploadFile({
           </div>
         )}
       </div>
-      {showDropModal && (
-        <div className="fixed w-full h-full z-30 inset-0 bg-black bg-opacity-75 flex items-center justify-center">
-          <div
-            className="bg-zinc-800 rounded-lg p-6 w-[400px] border border-gray-500"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <h2 className="text-white text-lg font-semibold mb-4">
-              Upload by year
-            </h2>
-            <input
-              type="number"
-              placeholder="Enter Year (e.g., 2024)"
-              value={year}
-              onChange={(e) => setYear(e.target.value)}
-              className="disabled:bg-zinc-600 disabled:text-slate-300 bg-zinc-900 text-white placeholder:text-white/20 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-            />
-            <div className="flex justify-end mt-6 space-x-3">
-              <button
-                onClick={handleDropYearSubmit}
-                className="px-4 py-2 text-white hover:bg-switch-selected hover:bg-opacity-60 bg-switch-selected shadow-md rounded-lg"
-              >
-                Submit
-              </button>
-              <button
-                onClick={handleDropYearCancel}
-                className="px-4 py-2 text-white bg-zinc-900 shadow-md rounded-lg hover:bg-opacity-60"
-              >
-                Cancel
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
       {showModal && (
         <div className="fixed w-full h-full z-30 inset-0 bg-black bg-opacity-75 flex items-center justify-center">
           <div
