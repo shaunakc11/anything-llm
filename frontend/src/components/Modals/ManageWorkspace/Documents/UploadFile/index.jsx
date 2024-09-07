@@ -52,11 +52,13 @@ export default function UploadFile({
   // Don't spam fetchKeys, wait 1s between calls at least.
   const handleUploadSuccess = () => {
     debounce(() => fetchKeys(true), 1000);
-    setShowModal(false);
+    setYearSubmitted(false);
+    setShowDropModal(false);
   };
   const handleUploadError = (_msg) => null; // stubbed.
 
   const onDrop = async (acceptedFiles, rejections) => {
+    setShowModal(true);
     const newAccepted = acceptedFiles.map((file) => {
       return {
         uid: v4(),
@@ -73,10 +75,11 @@ export default function UploadFile({
     });
     if (manualSelection) {
       setShowModal(false);
+      setManualSelection(false);
       setFiles([...newAccepted, ...newRejected]);
     } else {
-      setDragFiles([...newAccepted, ...newRejected]);
       setShowModal(true);
+      setDragFiles([...newAccepted, ...newRejected]);
     }
   };
 
@@ -103,10 +106,9 @@ export default function UploadFile({
         `Year ${year} submitted. You can now upload a file.`,
         "success"
       );
-      setYear("");
       setDragFiles([]);
       if (manualSelection) {
-        fileInputRef.current.click(); // Trigger the file input click for manual file selection
+        fileInputRef.current.click();
       }
     } else {
       showToast("Please enter a valid 4-digit year greater than 2000", "error");
@@ -120,8 +122,8 @@ export default function UploadFile({
 
   const handleYearCancel = () => {
     setShowModal(false);
-    setYear("");
     setManualSelection(false);
+    setYear("");
   };
 
   useEffect(() => {
