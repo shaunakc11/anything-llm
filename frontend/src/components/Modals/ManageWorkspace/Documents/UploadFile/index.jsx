@@ -75,8 +75,8 @@ export default function UploadFile({
       setShowModal(false);
       setFiles([...newAccepted, ...newRejected]);
     } else {
-      setDragFiles([...newAccepted, ...newRejected]);
       setShowModal(true);
+      setDragFiles([...newAccepted, ...newRejected]);
     }
   };
 
@@ -122,7 +122,6 @@ export default function UploadFile({
   const handleYearCancel = () => {
     setShowModal(false);
     setYear("");
-    setManualSelection(false);
   };
 
   useEffect(() => {
