@@ -96,6 +96,7 @@ export default function UploadFile({
     const yearNum = parseInt(year, 10);
     if (year && year.length === 4 && yearNum > 2000 && !isNaN(yearNum)) {
       setShowModal(false);
+      setYear("");
       if (!manualSelection) {
         setFiles((prevFiles) => [...prevFiles, ...dragFiles]);
       }
