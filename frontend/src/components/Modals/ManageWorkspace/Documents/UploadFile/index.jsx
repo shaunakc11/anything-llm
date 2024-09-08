@@ -125,6 +125,7 @@ export default function UploadFile({
     setShowModal(false);
     setManualSelection(false);
     setYear("");
+    setManualSelection(false);
   };
 
   useEffect(() => {
