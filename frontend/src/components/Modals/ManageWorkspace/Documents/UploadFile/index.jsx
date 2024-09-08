@@ -121,6 +121,7 @@ export default function UploadFile({
   const handleYearCancel = () => {
     setShowModal(false);
     setYear("");
+    setManualSelection(false);
   };
 
   useEffect(() => {
