@@ -157,6 +157,7 @@ Mintplex Labs & the community maintain a number of deployment methods, scripts, 
 - `yarn dev:server` To boot the server locally (from root of repo).
 - `yarn dev:frontend` To boot the frontend locally (from root of repo).
 - `yarn dev:collector` To then run the document collector (from root of repo).
+- `yarn dev:extension` To run the browser extension.
 
 [Learn about documents](./server/storage/documents/DOCUMENTS.md)
 
