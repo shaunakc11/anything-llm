@@ -53,7 +53,7 @@ export default function UploadFile({
   const handleUploadSuccess = () => {
     debounce(() => fetchKeys(true), 1000);
     setShowModal(false);
-    setYear("")
+    setYear("");
   };
   const handleUploadError = (_msg) => null;
 
@@ -81,7 +81,6 @@ export default function UploadFile({
       setShowModal(true);
       setDragFiles([...newAccepted, ...newRejected]);
     }
-
   };
 
   useEffect(() => {
@@ -100,6 +99,7 @@ export default function UploadFile({
     const yearNum = parseInt(year, 10);
     if (year && year.length === 4 && yearNum > 2000 && !isNaN(yearNum)) {
       setShowModal(false);
+      setYear("");
       if (!manualSelection) {
         setFiles((prevFiles) => [...prevFiles, ...dragFiles]);
       }
@@ -134,10 +134,7 @@ export default function UploadFile({
   }, [files, dragFiles]);
 
   return (
-    <div
-      className="pr-8"
-      style={{ display: "flex", flexDirection: "column", alignItems: "center" }}
-    >
+    <div className="flex flex-col items-center">
       <div
         className={`w-[280px] border-2 border-dashed rounded-2xl bg-zinc-900/50 p-3 ${ready ? "cursor-pointer" : "cursor-not-allowed"
           } hover:bg-zinc-900/90`}
