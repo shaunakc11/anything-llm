@@ -51,6 +51,7 @@ const {
   generateRecoveryCodes,
 } = require("../utils/PasswordRecovery");
 const { SlashCommandPresets } = require("../models/slashCommandsPresets");
+const { BrowserExtensionApiKey } = require("../models/browserExtensionApiKey");
 
 function systemEndpoints(app) {
   if (!app) return;
@@ -302,7 +303,7 @@ function systemEndpoints(app) {
       try {
         const query = queryParams(request);
         const VectorDb = getVectorDbClass();
-        const vectorCount = !!query.slug
+        const vectorCount = query.slug
           ? await VectorDb.namespaceCount(query.slug)
           : await VectorDb.totalVectors();
         response.status(200).json({ vectorCount });
@@ -482,6 +483,8 @@ function systemEndpoints(app) {
           limit_user_messages: false,
           message_limit: 25,
         });
+
+        await BrowserExtensionApiKey.migrateApiKeysToMultiUser(user.id);
 
         await updateENV(
           {

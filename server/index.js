@@ -24,6 +24,7 @@ const { workspaceThreadEndpoints } = require("./endpoints/workspaceThreads");
 const { documentEndpoints } = require("./endpoints/document");
 const { agentWebsocket } = require("./endpoints/agentWebsocket");
 const { experimentalEndpoints } = require("./endpoints/experimental");
+const { browserExtensionEndpoints } = require("./endpoints/browserExtension");
 const app = express();
 const apiRouter = express.Router();
 const FILE_LIMIT = "3GB";
@@ -38,7 +39,7 @@ app.use(
   })
 );
 
-if (!!process.env.ENABLE_HTTPS) {
+if (process.env.ENABLE_HTTPS) {
   bootSSL(app, process.env.SERVER_PORT || 3001);
 } else {
   require("express-ws")(app); // load WebSockets in non-SSL mode.
@@ -61,6 +62,9 @@ developerEndpoints(app, apiRouter);
 
 // Externally facing embedder endpoints
 embeddedEndpoints(apiRouter);
+
+// Externally facing browser extension endpoints
+browserExtensionEndpoints(apiRouter);
 
 if (process.env.NODE_ENV !== "development") {
   app.use(
