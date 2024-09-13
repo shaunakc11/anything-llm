@@ -80,6 +80,8 @@ export default function UploadFile({
     } else {
       setShowModal(true);
       setDragFiles([...newAccepted, ...newRejected]);
+      setShowModal(true);
+      setDragFiles([...newAccepted, ...newRejected]);
     }
   };
 
@@ -134,10 +136,7 @@ export default function UploadFile({
   }, [files, dragFiles]);
 
   return (
-    <div
-      className="pr-8"
-      style={{ display: "flex", flexDirection: "column", alignItems: "center" }}
-    >
+    <div className="flex flex-col items-center">
       <div
         className={`w-[280px] border-2 border-dashed rounded-2xl bg-zinc-900/50 p-3 ${ready ? "cursor-pointer" : "cursor-not-allowed"
           } hover:bg-zinc-900/90`}
