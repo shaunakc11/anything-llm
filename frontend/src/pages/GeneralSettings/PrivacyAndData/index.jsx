@@ -181,9 +181,10 @@ function TelemetryLogs({ settings }) {
           <p className="text-white/80 text-xs rounded-lg w-96">
             {t("privacy.anonymous.eventTagsDescription")}{" "}
             <a
-              href="https://github.com/bajajcodes"
+              href="https://github.com/aitomapp"
               className="underline text-blue-400"
               target="_blank"
+              rel="noreferrer"
             >
               Github here
             </a>
@@ -195,8 +196,9 @@ function TelemetryLogs({ settings }) {
               href="mailto:team@mintplexlabs.com"
               className="underline text-blue-400"
               target="_blank"
+              rel="noreferrer"
             >
-              bajajcodes
+              aitomapp
             </a>
             .
           </p>
