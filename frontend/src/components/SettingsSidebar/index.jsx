@@ -25,7 +25,6 @@ import {
   Robot,
   SplitVertical,
   SquaresFour,
-  Toolbox,
   Users,
 } from "@phosphor-icons/react";
 import React, { useEffect, useRef, useState } from "react";
@@ -291,7 +290,7 @@ const SidebarOptions = ({ user = null, t }) => (
     <Option
       href={paths.settings.browserExtension()}
       btnText={t("settings.browser-extension")}
-      icon={<Toolbox className="h-5 w-5 flex-shrink-0" />}
+      icon={<Key className="h-5 w-5 flex-shrink-0" />}
       user={user}
       flex={true}
       allowedRole={["admin", "manager"]}

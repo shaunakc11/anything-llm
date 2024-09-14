@@ -384,6 +384,17 @@ const TRANSLATIONS = {
     },
   },
 
+  extension: {
+    model: {
+      title: "New Browser Extension API Key",
+      description:
+        "After clicking 'Create API Key', AnythingLLM will attempt to connect to your browser extension automatically.",
+      info: "If you see 'Connected to AnythingLLM' in the extension, the connection was successful. If not, please copy the connection string and paste it into the extension manually.",
+      warning:
+        "Warning: You are in multi-user mode, this API key will allow access to all workspaces associated with your account. Please share it cautiously.",
+    },
+  },
+
   llm: {
     title: "LLM Preference",
     description:

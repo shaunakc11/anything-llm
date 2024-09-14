@@ -2,12 +2,14 @@ import React, { useEffect, useState } from "react";
 import { X } from "@phosphor-icons/react";
 import BrowserExtensionApiKey from "@/models/browserExtensionApiKey";
 import { fullApiUrl, POPUP_BROWSER_EXTENSION_EVENT } from "@/utils/constants";
+import { useTranslation } from "react-i18next";
 
 export default function NewBrowserExtensionApiKeyModal({
   closeModal,
   onSuccess,
   isMultiUser,
 }) {
+  const { t } = useTranslation();
   const [apiKey, setApiKey] = useState(null);
   const [error, setError] = useState(null);
   const [copied, setCopied] = useState(false);
@@ -52,7 +54,7 @@ export default function NewBrowserExtensionApiKeyModal({
       <div className="relative bg-main-gradient rounded-lg shadow">
         <div className="flex items-start justify-between p-4 border-b rounded-t border-gray-500/50">
           <h3 className="text-xl font-semibold text-white">
-            New Browser Extension API Key
+            {t("extension.model.title")}
           </h3>
           <button
             onClick={closeModal}
@@ -76,19 +78,14 @@ export default function NewBrowserExtensionApiKeyModal({
               )}
               {isMultiUser && (
                 <p className="text-yellow-300 text-xs md:text-sm font-semibold">
-                  Warning: You are in multi-user mode, this API key will allow
-                  access to all workspaces associated with your account. Please
-                  share it cautiously.
+                  {t("extension.model.warning")}
                 </p>
               )}
               <p className="text-white text-xs md:text-sm">
-                After clicking &quot;Create API Key&quot;, AnythingLLM will
-                attempt to connect to your browser extension automatically.
+                {t("extension.model.description")}
               </p>
               <p className="text-white text-xs md:text-sm">
-                If you see &quot;Connected to AnythingLLM&quot; in the
-                extension, the connection was successful. If not, please copy
-                the connection string and paste it into the extension manually.
+                {t("extension.model.info")}
               </p>
             </div>
           </div>

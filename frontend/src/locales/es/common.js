@@ -379,6 +379,17 @@ const TRANSLATIONS = {
     },
   },
 
+  extension: {
+    model: {
+      title: "Nueva Clave API de Extensión del Navegador",
+      description:
+        "Después de hacer clic en 'Crear Clave API', AnythingLLM intentará conectarse automáticamente a tu extensión del navegador.",
+      info: "Si ves 'Conectado a AnythingLLM' en la extensión, la conexión fue exitosa. Si no, por favor copia el string de conexión y pégalo manualmente en la extensión.",
+      warning:
+        "Advertencia: Estás en modo multiusuario, esta clave API permitirá el acceso a todos los espacios de trabajo asociados con tu cuenta. Por favor, compártela con precaución.",
+    },
+  },
+
   llm: {
     title: "Preferencia de LLM",
     description:
