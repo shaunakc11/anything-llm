@@ -231,7 +231,7 @@ function Directory({
             className={`overflow-y-auto h-full ${filteredFiles.length > 0 ? "w-max" : "w-full"} pt-12`}
           >
             {loading ? (
-              <div className="w-full h-full flex items-center justify-center flex-col gap-y-5">
+              <div className=" absolute w-full h-full flex items-center justify-center flex-col gap-y-5">
                 <PreLoader />
                 <p className="text-white/80 text-sm font-semibold animate-pulse text-center w-1/3">
                   {loadingMessage}
