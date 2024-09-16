@@ -23,7 +23,7 @@ export default function SpeechToText({ sendCommand }) {
   function startSTTSession() {
     if (!isMicrophoneAvailable) {
       alert(
-        "AnythingLLM does not have access to microphone. Please enable for this site to use this feature."
+        "OssorioIA does not have access to microphone. Please enable for this site to use this feature."
       );
       return;
     }
@@ -63,9 +63,8 @@ export default function SpeechToText({ sendCommand }) {
       data-tooltip-content="Speak your prompt"
       aria-label="Speak your prompt"
       onClick={listening ? endTTSSession : startSTTSession}
-      className={`relative flex justify-center items-center opacity-60 hover:opacity-100 cursor-pointer ${
-        !!listening ? "!opacity-100" : ""
-      }`}
+      className={`relative flex justify-center items-center opacity-60 hover:opacity-100 cursor-pointer ${listening ? "!opacity-100" : ""
+        }`}
     >
       <Microphone
         weight="fill"
