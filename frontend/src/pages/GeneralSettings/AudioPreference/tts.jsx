@@ -5,7 +5,7 @@ import LLMItem from "@/components/LLMSelection/LLMItem";
 import { CaretUpDown, MagnifyingGlass, X } from "@phosphor-icons/react";
 import CTAButton from "@/components/lib/CTAButton";
 import OpenAiLogo from "@/media/llmprovider/openai.png";
-import AnythingLLMIcon from "@/media/logo/anything-llm-icon.png";
+import OssorioiaLLMIcon from "@/media/logo/ossorioia-llm-icon.png";
 import ElevenLabsIcon from "@/media/ttsproviders/elevenlabs.png";
 import BrowserNative from "@/components/TextToSpeech/BrowserNative";
 import OpenAiTTSOptions from "@/components/TextToSpeech/OpenAiOptions";
@@ -16,7 +16,7 @@ const PROVIDERS = [
   {
     name: "System native",
     value: "native",
-    logo: AnythingLLMIcon,
+    logo: OssorioiaLLMIcon,
     options: (settings) => <BrowserNative settings={settings} />,
     description: "Uses your browser's built in TTS service if supported.",
   },

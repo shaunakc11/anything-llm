@@ -34,7 +34,7 @@ export default function App() {
     <>
       <Head />
       <div
-        id="anything-llm-embed-chat-container"
+        id="ossorioia-llm-embed-chat-container"
         className={`allm-fixed allm-inset-0 allm-z-50 ${isChatOpen ? "allm-block" : "allm-hidden"}`}
       >
         <div
@@ -43,7 +43,7 @@ export default function App() {
             maxHeight: windowHeight,
           }}
           className={`allm-h-full allm-w-full allm-bg-white allm-fixed allm-bottom-0 allm-right-0 allm-mb-4 allm-md:mr-4 allm-rounded-2xl allm-border allm-border-gray-300 allm-shadow-[0_4px_14px_rgba(0,0,0,0.25)] ${positionClasses[position]}`}
-          id="anything-llm-chat"
+          id="ossorioia-llm-chat"
         >
           {isChatOpen && (
             <ChatWindow
@@ -56,7 +56,7 @@ export default function App() {
       </div>
       {!isChatOpen && (
         <div
-          id="anything-llm-embed-chat-button-container"
+          id="ossorioia-llm-embed-chat-button-container"
           className={`allm-fixed allm-bottom-0 ${positionClasses[position]} allm-mb-4 allm-z-50`}
         >
           <OpenButton

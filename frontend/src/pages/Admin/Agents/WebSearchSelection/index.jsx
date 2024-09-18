@@ -1,15 +1,11 @@
 import React, { useEffect, useRef, useState } from "react";
-import AnythingLLMIcon from "@/media/logo/anything-llm-icon.png";
+import OssorioiaLLMIcon from "@/media/logo/ossorioia-llm-icon.png";
 import GoogleSearchIcon from "./icons/google.png";
 import SerperDotDevIcon from "./icons/serper.png";
 import BingSearchIcon from "./icons/bing.png";
 import SerplySearchIcon from "./icons/serply.png";
 import SearXNGSearchIcon from "./icons/searxng.png";
-import {
-  CaretUpDown,
-  MagnifyingGlass,
-  X
-} from "@phosphor-icons/react";
+import { CaretUpDown, MagnifyingGlass, X } from "@phosphor-icons/react";
 import SearchProviderItem from "./SearchProviderItem";
 import {
   SerperDotDevOptions,
@@ -23,7 +19,7 @@ const SEARCH_PROVIDERS = [
   {
     name: "Please make a selection",
     value: "none",
-    logo: AnythingLLMIcon,
+    logo: OssorioiaLLMIcon,
     options: () => <React.Fragment />,
     description:
       "Web search will be disabled until a provider and keys are provided.",
@@ -79,7 +75,7 @@ export default function AgentWebSearchSelection({
   enabled = false,
   setHasChanges,
   icon,
-  image
+  image,
 }) {
   const searchInputRef = useRef(null);
   const [filteredResults, setFilteredResults] = useState([]);
@@ -142,11 +138,7 @@ export default function AgentWebSearchSelection({
             <span className="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300"></span>
           </label>
         </div>
-        <img
-          src={image}
-          alt={title}
-          className="w-full rounded-md"
-        />
+        <img src={image} alt={title} className="w-full rounded-md" />
         <p className="text-white text-opacity-60 text-xs font-medium py-1.5">
           {description}
         </p>

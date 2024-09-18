@@ -36,15 +36,14 @@ export default function GithubOptions() {
         ignorePaths: ignores,
       });
 
-      if (!!error) {
+      if (error) {
         showToast(error, "error", { clear: true });
         setLoading(false);
         return;
       }
 
       showToast(
-        `${data.files} ${pluralize("file", data.files)} collected from ${
-          data.author
+        `${data.files} ${pluralize("file", data.files)} collected from ${data.author
         }/${data.repo}:${data.branch}. Output folder is ${data.destination}.`,
         "success",
         { clear: true }
@@ -78,7 +77,7 @@ export default function GithubOptions() {
                   type="url"
                   name="repo"
                   className="bg-zinc-900 text-white placeholder:text-white/20 text-sm rounded-lg focus:border-white block w-full p-2.5"
-                  placeholder="https://github.com/Mintplex-Labs/anything-llm"
+                  placeholder="https://github.com/ossorioia-llm"
                   required={true}
                   autoComplete="off"
                   onChange={(e) => setRepo(e.target.value)}
@@ -234,7 +233,7 @@ function GitHubBranchSelection({ repo, accessToken }) {
 }
 
 function PATAlert({ accessToken }) {
-  if (!!accessToken) return null;
+  if (accessToken) return null;
   return (
     <div className="flex flex-col md:flex-row md:items-center gap-x-2 text-white mb-4 bg-blue-800/30 w-fit rounded-lg px-4 py-2">
       <div className="gap-x-2 flex items-center">
@@ -262,7 +261,7 @@ function PATAlert({ accessToken }) {
 }
 
 function PATTooltip({ accessToken }) {
-  if (!!accessToken) return null;
+  if (accessToken) return null;
   return (
     <>
       {!accessToken && (

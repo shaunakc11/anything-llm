@@ -34,7 +34,7 @@ export default {
     },
   },
   github: () => {
-    return "https://github.com/Mintplex-Labs/anything-llm";
+    return "https://github.com/ossorioia-llm";
   },
   discord: () => {
     return "https://discord.com/invite/6UyHPeGZAC";
@@ -42,11 +42,11 @@ export default {
   docs: () => {
     return "https://docs.ossorioia.com";
   },
-  mailToMintplex: () => {
-    return "mailto:team@mintplexlabs.com";
+  mailToOssorioIA: () => {
+    return "mailto:team@ossorioia.com";
   },
   hosting: () => {
-    return "https://my.mintplexlabs.com/aio-checkout?product=anythingllm";
+    return "https://ossorioia.com";
   },
   workspace: {
     chat: (slug) => {

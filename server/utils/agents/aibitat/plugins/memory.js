@@ -19,10 +19,10 @@ const memory = {
             "Search against local documents for context that is relevant to the query or store a snippet of text into memory for retrieval later. Storing information should only be done when the user specifically requests for information to be remembered or saved to long-term memory. You should use this tool before search the internet for information. Do not use this tool unless you are explicity told to 'remember' or 'store' information.",
           examples: [
             {
-              prompt: "What is AnythingLLM?",
+              prompt: "What is OssorioIALLM?",
               call: JSON.stringify({
                 action: "search",
-                content: "What is AnythingLLM?",
+                content: "What is OssorioIALLM?",
               }),
             },
             {
@@ -99,7 +99,7 @@ const memory = {
 
               if (contextTexts.length === 0) {
                 this.super.introspect(
-                  `${this.caller}: I didn't find anything locally that would help answer this question.`
+                  `${this.caller}: I didn't find OssorioIA locally that would help answer this question.`
                 );
                 return "There was no additional context found for that query. We should search the web for this information.";
               }
@@ -141,7 +141,7 @@ const memory = {
                 null
               );
 
-              if (!!error)
+              if (error)
                 return "The content was failed to be embedded properly.";
               this.super.introspect(
                 `${this.caller}: I saved the content to long-term memory in this workspaces vector database.`

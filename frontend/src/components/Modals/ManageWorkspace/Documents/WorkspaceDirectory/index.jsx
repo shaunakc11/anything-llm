@@ -58,10 +58,9 @@ function WorkspaceDirectory({
           </div>
         )}
         <div
-          className={`relative w-[560px] bg-zinc-900 rounded-2xl mt-4 overflow-y-auto border-4 ${
-            (highlightWorkspace ? "border-cyan-300/80" : "border-transparent",
-            showWorkspaceName ? "h-[445px]" : "h-[95vh]")
-          }`}
+          className={`relative w-[560px] bg-zinc-900 rounded-2xl mt-4 overflow-y-auto border-4 ${(highlightWorkspace ? "border-cyan-300/80" : "border-transparent",
+              showWorkspaceName ? "h-[445px]" : "h-[95vh]")
+            }`}
         >
           <div className="text-white/80 text-xs grid grid-cols-12 py-2 px-8 border-b border-white/20 bg-zinc-900 sticky top-0 z-10">
             <p className="col-span-5">Name</p>
@@ -103,11 +102,10 @@ function WorkspaceDirectory({
               <p className="text-sm font-semibold">
                 {embeddingCosts === 0
                   ? ""
-                  : `Estimated Cost: ${
-                      embeddingCosts < 0.01
-                        ? `< $0.01`
-                        : dollarFormat(embeddingCosts)
-                    }`}
+                  : `Estimated Cost: ${embeddingCosts < 0.01
+                    ? `< $0.01`
+                    : dollarFormat(embeddingCosts)
+                  }`}
               </p>
               <p className="mt-2 text-xs italic" hidden={embeddingCosts === 0}>
                 *One time cost for embeddings
@@ -161,7 +159,7 @@ const PinAlert = memo(() => {
           </div>
           <div className="w-full p-6 text-white text-md flex flex-col gap-y-2">
             <p>
-              When you <b>pin</b> a document in AnythingLLM we will inject the
+              When you <b>pin</b> a document in OssorioiaLLM we will inject the
               entire content of the document into your prompt window for your
               LLM to fully comprehend.
             </p>
@@ -170,7 +168,7 @@ const PinAlert = memo(() => {
               that are critical to its knowledge-base.
             </p>
             <p>
-              If you are not getting the answers you desire from AnythingLLM by
+              If you are not getting the answers you desire from OssorioiaLLM by
               default then pinning is a great way to get higher quality answers
               in a click.
             </p>
@@ -200,7 +198,7 @@ const DocumentWatchAlert = memo(() => {
   }
 
   function handlePinEvent() {
-    if (!!window?.localStorage?.getItem(SEEN_WATCH_ALERT)) return;
+    if (window?.localStorage?.getItem(SEEN_WATCH_ALERT)) return;
     setShowAlert(true);
   }
 
@@ -226,7 +224,7 @@ const DocumentWatchAlert = memo(() => {
           </div>
           <div className="w-full p-6 text-white text-md flex flex-col gap-y-2">
             <p>
-              When you <b>watch</b> a document in AnythingLLM we will{" "}
+              When you <b>watch</b> a document in OssorioiaLLM we will{" "}
               <i>automatically</i> sync your document content from its original
               source on regular intervals. This will automatically update the
               content in every workspace where this file is managed.

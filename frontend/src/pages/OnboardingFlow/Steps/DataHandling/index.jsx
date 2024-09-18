@@ -1,6 +1,6 @@
 import PreLoader from "@/components/Preloader";
 import System from "@/models/system";
-import AnythingLLMIcon from "@/media/logo/anything-llm-icon.png";
+import OssorioiaLLMIcon from "@/media/logo/ossorioia-llm-icon.png";
 import OpenAiLogo from "@/media/llmprovider/openai.png";
 import GenericOpenAiLogo from "@/media/llmprovider/generic-openai.png";
 import AzureOpenAiLogo from "@/media/llmprovider/azure.png";
@@ -96,7 +96,7 @@ export const LLM_SELECTION_PRIVACY = {
     description: [
       "Your model and chats are only accessible on this OssorioIA instance",
     ],
-    logo: AnythingLLMIcon,
+    logo: OssorioiaLLMIcon,
   },
   togetherai: {
     name: "TogetherAI",
@@ -248,7 +248,7 @@ export const EMBEDDING_ENGINE_PRIVACY = {
     description: [
       "Your document text is embedded privately on this instance of OssorioIA",
     ],
-    logo: AnythingLLMIcon,
+    logo: OssorioiaLLMIcon,
   },
   openai: {
     name: "OpenAI",

@@ -195,7 +195,7 @@ const TRANSLATIONS = {
         "The number of previous chats that will be included in the response's short-term memory.",
       recommend: "Recommend 20. ",
       "desc-end":
-        "AAnything more than 45 is likely to lead to continuous chat failures depending on message size.",
+        "Ossorioia more than 45 is likely to lead to continuous chat failures depending on message size.",
     },
     prompt: {
       title: "Prompt",

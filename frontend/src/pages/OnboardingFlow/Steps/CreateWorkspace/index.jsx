@@ -8,7 +8,7 @@ import { useTranslation } from "react-i18next";
 
 const TITLE = "Create your first workspace";
 const DESCRIPTION =
-  "Create your first workspace and get started with AnythingLLM.";
+  "Create your first workspace and get started with OssorioiaLLM.";
 
 export default function CreateWorkspace({
   setHeader,
@@ -40,7 +40,7 @@ export default function CreateWorkspace({
       name: form.get("name"),
       onboardingComplete: true,
     });
-    if (!!workspace) {
+    if (workspace) {
       showToast(
         "Workspace created successfully! Taking you to home...",
         "success"

@@ -1,7 +1,7 @@
 const { WorkspaceChats } = require("../../../../models/workspaceChats");
 
 /**
- * Plugin to save chat history to AnythingLLM DB.
+ * Plugin to save chat history to OssorioiaLLM DB.
  */
 const chatHistory = {
   name: "chat-history",
@@ -38,7 +38,7 @@ const chatHistory = {
               prompt: prev.content,
               response: last.content,
             });
-          } catch {}
+          } catch { }
         });
       },
       _store: async function (aibitat, { prompt, response } = {}) {

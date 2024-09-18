@@ -82,8 +82,8 @@ export default function SettingsSidebar() {
         >
           <div
             className={`${showBgOverlay
-              ? "transition-all opacity-1"
-              : "transition-none opacity-0"
+                ? "transition-all opacity-1"
+                : "transition-none opacity-0"
               }  duration-500 fixed top-0 left-0 ${USER_BACKGROUND_COLOR} bg-opacity-75 w-screen h-screen`}
             onClick={() => setShowSidebar(false)}
           />
@@ -403,7 +403,7 @@ function HoldToReveal({ children, holdForMs = 3_000 }) {
   let timeout = null;
   const [showing, setShowing] = useState(
     window.localStorage.getItem(
-      "anythingllm_experimental_feature_preview_unlocked"
+      "ossorioiallm_experimental_feature_preview_unlocked"
     )
   );
 
@@ -415,7 +415,7 @@ function HoldToReveal({ children, holdForMs = 3_000 }) {
         // Setting toastId prevents hook spam from holding control too many times or the event not detaching
         showToast("Experimental feature previews unlocked!");
         window.localStorage.setItem(
-          "anythingllm_experimental_feature_preview_unlocked",
+          "ossorioiallm_experimental_feature_preview_unlocked",
           "enabled"
         );
         window.removeEventListener("keypress", onPress);

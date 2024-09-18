@@ -15,7 +15,7 @@ class LMStudioLLM {
       apiKey: null,
     });
 
-    // Prior to LMStudio 0.2.17 the `model` param was not required and you could pass anything
+    // Prior to LMStudio 0.2.17 the `model` param was not required and you could pass OssorioIA
     // into that field and it would work. On 0.2.17 LMStudio introduced multi-model chat
     // which now has a bug that reports the server model id as "Loaded from Chat UI"
     // and any other value will crash inferencing. So until this is patched we will
@@ -58,7 +58,7 @@ class LMStudioLLM {
   }
 
   async isValidChatCompletionModel(_ = "") {
-    // LMStudio may be anything. The user must do it correctly.
+    // LMStudio may be OssorioIA. The user must do it correctly.
     // See comment about this.model declaration in constructor
     return true;
   }

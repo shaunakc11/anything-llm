@@ -4,7 +4,7 @@ import renderMarkdown from "@/utils/chat/markdown";
 import { embedderSettings } from "@/main";
 import { v4 } from "uuid";
 import createDOMPurify from "dompurify";
-import AnythingLLMIcon from "@/assets/anything-llm-icon.svg";
+import OssorioiaLLMIcon from "@/assets/ossorioia-llm-icon.svg";
 import { formatDate } from "@/utils/date";
 
 const DOMPurify = createDOMPurify(window);
@@ -24,22 +24,21 @@ const HistoricalMessage = forwardRef(
             className={`allm-text-[10px] allm-text-gray-400 allm-ml-[54px] allm-mr-6 allm-mb-2 allm-text-left allm-font-sans`}
           >
             {embedderSettings.settings.assistantName ||
-              "Anything LLM Chat Assistant"}
+              "Ossorioia LLM Chat Assistant"}
           </div>
         )}
         <div
           key={uuid}
           ref={ref}
-          className={`allm-flex allm-items-start allm-w-full allm-h-fit ${
-            role === "user" ? "allm-justify-end" : "allm-justify-start"
-          }`}
+          className={`allm-flex allm-items-start allm-w-full allm-h-fit ${role === "user" ? "allm-justify-end" : "allm-justify-start"
+            }`}
         >
           {role === "assistant" && (
             <img
-              src={embedderSettings.settings.assistantIcon || AnythingLLMIcon}
-              alt="Anything LLM Icon"
+              src={embedderSettings.settings.assistantIcon || OssorioiaLLMIcon}
+              alt="Ossorioia LLM Icon"
               className="allm-w-9 allm-h-9 allm-flex-shrink-0 allm-ml-2 allm-mt-2"
-              id="anything-llm-icon"
+              id="ossorioia-llm-icon"
             />
           )}
           <div
@@ -50,13 +49,12 @@ const HistoricalMessage = forwardRef(
                   ? embedderSettings.USER_STYLES.msgBg
                   : embedderSettings.ASSISTANT_STYLES.msgBg,
             }}
-            className={`allm-py-[11px] allm-px-4 allm-flex allm-flex-col allm-font-sans ${
-              error
+            className={`allm-py-[11px] allm-px-4 allm-flex allm-flex-col allm-font-sans ${error
                 ? "allm-bg-red-200 allm-rounded-lg allm-mr-[37px] allm-ml-[9px]"
                 : role === "user"
                   ? `${embedderSettings.USER_STYLES.base} allm-anything-llm-user-message`
                   : `${embedderSettings.ASSISTANT_STYLES.base} allm-anything-llm-assistant-message`
-            } allm-shadow-[0_4px_14px_rgba(0,0,0,0.25)]`}
+              } allm-shadow-[0_4px_14px_rgba(0,0,0,0.25)]`}
           >
             <div className="allm-flex">
               {error ? (

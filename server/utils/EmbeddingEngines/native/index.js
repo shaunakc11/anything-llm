@@ -4,9 +4,9 @@ const { toChunks } = require("../../helpers");
 const { v4 } = require("uuid");
 
 class NativeEmbedder {
-  // This is a folder that Mintplex Labs hosts for those who cannot capture the HF model download
+  // This is a folder that hosts for those who cannot capture the HF model download
   // endpoint for various reasons. This endpoint is not guaranteed to be active or maintained
-  // and may go offline at any time at Mintplex Labs's discretion.
+  // and may go offline at any time at discretion.
   #fallbackHost =
     "https://s3.us-west-1.amazonaws.com/public.useanything.com/support/models/";
 
@@ -71,16 +71,15 @@ class NativeEmbedder {
           cache_dir: this.cacheDir,
           ...(!this.modelDownloaded
             ? {
-                // Show download progress if we need to download any files
-                progress_callback: (data) => {
-                  if (!data.hasOwnProperty("progress")) return;
-                  console.log(
-                    `\x1b[36m[NativeEmbedder - Downloading model]\x1b[0m ${
-                      data.file
-                    } ${~~data?.progress}%`
-                  );
-                },
-              }
+              // Show download progress if we need to download any files
+              progress_callback: (data) => {
+                if (!data.hasOwnProperty("progress")) return;
+                console.log(
+                  `\x1b[36m[NativeEmbedder - Downloading model]\x1b[0m ${data.file
+                  } ${~~data?.progress}%`
+                );
+              },
+            }
             : {}),
         }),
         retry: false,
@@ -98,7 +97,6 @@ class NativeEmbedder {
   // This function will do a single fallback attempt (not recursive on purpose) to try to grab the embedder model on first embed
   // since at time, some clients cannot properly download the model from HF servers due to a number of reasons (IP, VPN, etc).
   // Given this model is critical and nobody reads the GitHub issues before submitting the bug, we get the same bug
-  // report 20 times a day: https://github.com/Mintplex-Labs/anything-llm/issues/821
   // So to attempt to monkey-patch this we have a single fallback URL to help alleviate duplicate bug reports.
   async embedderClient() {
     if (!this.modelDownloaded)
@@ -115,7 +113,7 @@ class NativeEmbedder {
     this.log(
       `Failed to download model from primary URL. Using fallback ${fetchResponse.retry}`
     );
-    if (!!fetchResponse.retry)
+    if (fetchResponse.retry)
       fetchResponse = await this.#fetchWithHost(fetchResponse.retry);
     if (fetchResponse.pipeline !== null) {
       this.modelDownloaded = true;

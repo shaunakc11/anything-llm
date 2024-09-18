@@ -14,10 +14,10 @@ export default function NewApiKeyModal({ closeModal }) {
     setError(null);
     e.preventDefault();
     const user = userFromStorage();
-    const Model = !!user ? Admin : System;
+    const Model = user ? Admin : System;
 
     const { apiKey: newApiKey, error } = await Model.generateApiKey();
-    if (!!newApiKey) setApiKey(newApiKey);
+    if (newApiKey) setApiKey(newApiKey);
     setError(error);
   };
   const copyApiKey = () => {
@@ -65,7 +65,7 @@ export default function NewApiKeyModal({ closeModal }) {
               )}
               <p className="text-white text-xs md:text-sm">
                 Once created the API key can be used to programmatically access
-                and configure this AnythingLLM instance.
+                and configure this OssorioiaLLM instance.
               </p>
               <a
                 href={paths.apiDocs()}

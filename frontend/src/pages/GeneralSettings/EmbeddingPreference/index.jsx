@@ -3,7 +3,7 @@ import Sidebar from "@/components/SettingsSidebar";
 import { isMobile } from "react-device-detect";
 import System from "@/models/system";
 import showToast from "@/utils/toast";
-import AnythingLLMIcon from "@/media/logo/anything-llm-icon.png";
+import OssorioiaLLMIcon from "@/media/logo/ossorioia-llm-icon.png";
 import OpenAiLogo from "@/media/llmprovider/openai.png";
 import AzureOpenAiLogo from "@/media/llmprovider/azure.png";
 import LocalAiLogo from "@/media/llmprovider/localai.png";
@@ -38,7 +38,7 @@ const EMBEDDERS = [
   {
     name: "OssorioIA Embedder",
     value: "native",
-    logo: AnythingLLMIcon,
+    logo: OssorioiaLLMIcon,
     options: (settings) => <NativeEmbeddingOptions settings={settings} />,
     description:
       "Use the built-in embedding provider for OssorioIA. Zero setup!",

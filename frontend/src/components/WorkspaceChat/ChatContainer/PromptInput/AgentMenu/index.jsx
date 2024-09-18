@@ -15,9 +15,8 @@ export default function AvailableAgentsButton({ showing, setShowAgents }) {
       data-tooltip-content="View all available agents you can use for chatting."
       aria-label="View all available agents you can use for chatting."
       onClick={() => setShowAgents(!showing)}
-      className={`flex justify-center items-center opacity-60 hover:opacity-100 cursor-pointer ${
-        showing ? "!opacity-100" : ""
-      }`}
+      className={`flex justify-center items-center opacity-60 hover:opacity-100 cursor-pointer ${showing ? "!opacity-100" : ""
+        }`}
     >
       <At className="w-6 h-6 pointer-events-none text-white" />
       <Tooltip
@@ -117,7 +116,7 @@ export function useAvailableAgents() {
   return { showAgents, setShowAgents };
 }
 
-const SEEN_FT_AGENT_MODAL = "anythingllm_seen_first_time_agent_modal";
+const SEEN_FT_AGENT_MODAL = "ossorioiallm_seen_first_time_agent_modal";
 function FirstTimeAgentUser() {
   const { isOpen, openModal, closeModal } = useModal();
   useEffect(() => {

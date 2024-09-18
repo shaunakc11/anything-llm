@@ -17,7 +17,7 @@ const exportOptions = {
     mimeType: "text/csv",
     fileExtension: "csv",
     filenameFunc: () => {
-      return `anythingllm-chats-${new Date().toLocaleDateString()}`;
+      return `ossorioiallm-chats-${new Date().toLocaleDateString()}`;
     },
   },
   json: {
@@ -25,7 +25,7 @@ const exportOptions = {
     mimeType: "application/json",
     fileExtension: "json",
     filenameFunc: () => {
-      return `anythingllm-chats-${new Date().toLocaleDateString()}`;
+      return `ossorioiallm-chats-${new Date().toLocaleDateString()}`;
     },
   },
   jsonl: {
@@ -33,7 +33,7 @@ const exportOptions = {
     mimeType: "application/jsonl",
     fileExtension: "jsonl",
     filenameFunc: () => {
-      return `anythingllm-chats-${new Date().toLocaleDateString()}-lines`;
+      return `ossorioiallm-chats-${new Date().toLocaleDateString()}-lines`;
     },
   },
   jsonAlpaca: {
@@ -41,7 +41,7 @@ const exportOptions = {
     mimeType: "application/json",
     fileExtension: "json",
     filenameFunc: () => {
-      return `anythingllm-chats-${new Date().toLocaleDateString()}-alpaca`;
+      return `ossorioiallm-chats-${new Date().toLocaleDateString()}-alpaca`;
     },
   },
 };
@@ -59,7 +59,7 @@ export default function WorkspaceChats() {
 
   const handleDumpChats = async (exportType) => {
     const chats = await System.exportChats(exportType);
-    if (!!chats) {
+    if (chats) {
       const { name, mimeType, fileExtension, filenameFunc } =
         exportOptions[exportType];
       const blob = new Blob([chats], { type: mimeType });
@@ -138,9 +138,8 @@ export default function WorkspaceChats() {
                 </button>
                 <div
                   ref={menuRef}
-                  className={`${
-                    showMenu ? "slide-down" : "slide-up hidden"
-                  } z-20 w-fit rounded-lg absolute top-full right-0 bg-secondary mt-2 shadow-md`}
+                  className={`${showMenu ? "slide-down" : "slide-up hidden"
+                    } z-20 w-fit rounded-lg absolute top-full right-0 bg-secondary mt-2 shadow-md`}
                 >
                   <div className="py-2">
                     {Object.entries(exportOptions).map(([key, data]) => (

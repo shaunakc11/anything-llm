@@ -203,7 +203,7 @@ const Weaviate = {
               .classCreator()
               .withClass({
                 class: camelCase(namespace),
-                description: `Class created by AnythingLLM named ${camelCase(
+                description: `Class created by OssorioIALLM named ${camelCase(
                   namespace
                 )}`,
                 vectorizer: "none",
@@ -312,7 +312,7 @@ const Weaviate = {
           .classCreator()
           .withClass({
             class: camelCase(namespace),
-            description: `Class created by AnythingLLM named ${camelCase(
+            description: `Class created by OssorioIALLM named ${camelCase(
               namespace
             )}`,
             vectorizer: "none",
@@ -417,9 +417,8 @@ const Weaviate = {
     const details = await this.namespace(client, namespace);
     await this.deleteVectorsInNamespace(client, namespace);
     return {
-      message: `Namespace ${camelCase(namespace)} was deleted along with ${
-        details?.vectorCount
-      } vectors.`,
+      message: `Namespace ${camelCase(namespace)} was deleted along with ${details?.vectorCount
+        } vectors.`,
     };
   },
   reset: async function () {

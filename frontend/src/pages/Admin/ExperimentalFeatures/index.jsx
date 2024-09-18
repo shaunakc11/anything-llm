@@ -113,22 +113,18 @@ function FeatureList({
 
   return (
     <div
-      className={`bg-white/5 text-white rounded-xl ${
-        isMobile ? "w-full" : "min-w-[360px] w-fit"
-      }`}
+      className={`bg-white/5 text-white rounded-xl ${isMobile ? "w-full" : "min-w-[360px] w-fit"
+        }`}
     >
       {Object.entries(features).map(([feature, settings], index) => (
         <div
           key={feature}
-          className={`py-3 px-4 flex items-center justify-between ${
-            index === 0 ? "rounded-t-xl" : ""
-          } ${
-            index === Object.keys(features).length - 1
+          className={`py-3 px-4 flex items-center justify-between ${index === 0 ? "rounded-t-xl" : ""
+            } ${index === Object.keys(features).length - 1
               ? "rounded-b-xl"
               : "border-b border-white/10"
-          } cursor-pointer transition-all duration-300  hover:bg-white/5 ${
-            selectedFeature === feature ? "bg-white/10" : ""
-          }`}
+            } cursor-pointer transition-all duration-300  hover:bg-white/5 ${selectedFeature === feature ? "bg-white/10" : ""
+            }`}
           onClick={() => handleClick?.(feature)}
         >
           <div className="text-sm font-light">{settings.title}</div>
@@ -157,13 +153,13 @@ function SelectedFeatureComponent({ feature, settings, refresh }) {
 
 function FeatureVerification({ children }) {
   if (
-    !window.localStorage.getItem("anythingllm_tos_experimental_feature_set")
+    !window.localStorage.getItem("ossorioiallm_tos_experimental_feature_set")
   ) {
     function acceptTos(e) {
       e.preventDefault();
 
       window.localStorage.setItem(
-        "anythingllm_tos_experimental_feature_set",
+        "ossorioiallm_tos_experimental_feature_set",
         "accepted"
       );
       showToast(
@@ -192,7 +188,7 @@ function FeatureVerification({ children }) {
               <div className="p-6 space-y-6 flex h-full w-full">
                 <div className="w-full flex flex-col gap-y-4 text-white">
                   <p>
-                    Experimental features of AnythingLLM are features that we
+                    Experimental features of OssorioiaLLM are features that we
                     are piloting and are <b>opt-in</b>. We proactively will
                     condition or warn you on any potential concerns should any
                     exist prior to approval of any feature.
@@ -212,7 +208,7 @@ function FeatureVerification({ children }) {
                         Increased cost or use of any connected LLM or embedding
                         provider.
                       </li>
-                      <li>Potential bugs or issues using AnythingLLM.</li>
+                      <li>Potential bugs or issues using OssorioiaLLM.</li>
                     </ul>
                   </div>
 
@@ -226,7 +222,7 @@ function FeatureVerification({ children }) {
                       <li>The feature being used is not currently stable.</li>
                       <li>
                         The feature may not be available in future versions,
-                        configurations, or subscriptions of AnythingLLM.
+                        configurations, or subscriptions of OssorioiaLLM.
                       </li>
                       <li>
                         Your privacy settings <b>will be honored</b> with use of

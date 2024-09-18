@@ -4,8 +4,8 @@ import { CheckCircle } from "@phosphor-icons/react";
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 
-const TITLE = "Welcome to AnythingLLM";
-const DESCRIPTION = "Help us make AnythingLLM built for your needs. Optional.";
+const TITLE = "Welcome to OssorioiaLLM";
+const DESCRIPTION = "Help us make OssorioiaLLM built for your needs. Optional.";
 
 async function sendQuestionnaire({ email, useCase, comment }) {
   if (import.meta.env.DEV) {
@@ -38,7 +38,7 @@ export default function Survey({ setHeader, setForwardBtn, setBackBtn }) {
   const submitRef = useRef(null);
 
   function handleForward() {
-    if (!!window?.localStorage?.getItem(COMPLETE_QUESTIONNAIRE)) {
+    if (window?.localStorage?.getItem(COMPLETE_QUESTIONNAIRE)) {
       navigate(paths.onboarding.createWorkspace());
       return;
     }
@@ -91,7 +91,7 @@ export default function Survey({ setHeader, setForwardBtn, setBackBtn }) {
     navigate(paths.onboarding.createWorkspace());
   };
 
-  if (!!window?.localStorage?.getItem(COMPLETE_QUESTIONNAIRE)) {
+  if (window?.localStorage?.getItem(COMPLETE_QUESTIONNAIRE)) {
     return (
       <div className="w-full flex justify-center items-center py-40">
         <div className="w-full flex items-center justify-center px-1 md:px-8 py-4">
@@ -131,13 +131,12 @@ export default function Survey({ setHeader, setForwardBtn, setBackBtn }) {
             className="text-white text-base font-medium"
             htmlFor="use_case"
           >
-            What will you use AnythingLLM for?{" "}
+            What will you use OssorioiaLLM for?{" "}
           </label>
           <div className="mt-2 gap-y-3 flex flex-col">
             <label
-              className={`transition-all duration-300 w-full h-11 p-2.5 bg-white/10 rounded-lg flex justify-start items-center gap-2.5 cursor-pointer border border-transparent ${
-                selectedOption === "job" ? "border-white border-opacity-40" : ""
-              } hover:border-white/60`}
+              className={`transition-all duration-300 w-full h-11 p-2.5 bg-white/10 rounded-lg flex justify-start items-center gap-2.5 cursor-pointer border border-transparent ${selectedOption === "job" ? "border-white border-opacity-40" : ""
+                } hover:border-white/60`}
             >
               <input
                 type="radio"
@@ -148,20 +147,18 @@ export default function Survey({ setHeader, setForwardBtn, setBackBtn }) {
                 className="hidden"
               />
               <div
-                className={`w-4 h-4 rounded-full border-2 border-white mr-2 ${
-                  selectedOption === "job" ? "bg-white" : ""
-                }`}
+                className={`w-4 h-4 rounded-full border-2 border-white mr-2 ${selectedOption === "job" ? "bg-white" : ""
+                  }`}
               ></div>
               <div className="text-white text-sm font-medium font-['Plus Jakarta Sans'] leading-tight">
                 For work
               </div>
             </label>
             <label
-              className={`transition-all duration-300 w-full h-11 p-2.5 bg-white/10 rounded-lg flex justify-start items-center gap-2.5 cursor-pointer border border-transparent ${
-                selectedOption === "personal"
+              className={`transition-all duration-300 w-full h-11 p-2.5 bg-white/10 rounded-lg flex justify-start items-center gap-2.5 cursor-pointer border border-transparent ${selectedOption === "personal"
                   ? "border-white border-opacity-40"
                   : ""
-              } hover:border-white/60`}
+                } hover:border-white/60`}
             >
               <input
                 type="radio"
@@ -172,20 +169,18 @@ export default function Survey({ setHeader, setForwardBtn, setBackBtn }) {
                 className="hidden"
               />
               <div
-                className={`w-4 h-4 rounded-full border-2 border-white mr-2 ${
-                  selectedOption === "personal" ? "bg-white" : ""
-                }`}
+                className={`w-4 h-4 rounded-full border-2 border-white mr-2 ${selectedOption === "personal" ? "bg-white" : ""
+                  }`}
               ></div>
               <div className="text-white text-sm font-medium font-['Plus Jakarta Sans'] leading-tight">
                 For my personal use
               </div>
             </label>
             <label
-              className={`transition-all duration-300 w-full h-11 p-2.5 bg-white/10 rounded-lg flex justify-start items-center gap-2.5 cursor-pointer border border-transparent ${
-                selectedOption === "other"
+              className={`transition-all duration-300 w-full h-11 p-2.5 bg-white/10 rounded-lg flex justify-start items-center gap-2.5 cursor-pointer border border-transparent ${selectedOption === "other"
                   ? "border-white border-opacity-40"
                   : ""
-              } hover:border-white/60`}
+                } hover:border-white/60`}
             >
               <input
                 type="radio"
@@ -196,9 +191,8 @@ export default function Survey({ setHeader, setForwardBtn, setBackBtn }) {
                 className="hidden"
               />
               <div
-                className={`w-4 h-4 rounded-full border-2 border-white mr-2 ${
-                  selectedOption === "other" ? "bg-white" : ""
-                }`}
+                className={`w-4 h-4 rounded-full border-2 border-white mr-2 ${selectedOption === "other" ? "bg-white" : ""
+                  }`}
               ></div>
               <div className="text-white text-sm font-medium font-['Plus Jakarta Sans'] leading-tight">
                 Other

@@ -4,10 +4,10 @@ const fs = require("fs");
 const path = require("path");
 require("dotenv").config();
 
-const DATABASE_PATH = process.env.DB_URL || "../../storage/anythingllm.db";
+const DATABASE_PATH = process.env.DB_URL || "../../storage/ossorioiallm.db";
 const BACKUP_PATH = path.join(
   path.dirname(DATABASE_PATH),
-  "anythingllm_backup.db"
+  "ossorioiallm_backup.db"
 );
 
 // Backup the database before migrating data

@@ -9,9 +9,8 @@ export default function LiveSyncToggle({ enabled = false, onToggle }) {
   const [status, setStatus] = useState(enabled);
 
   async function toggleFeatureFlag() {
-    const updated = await System.experimentalFeatures.liveSync.toggleFeature(
-      !status
-    );
+    const updated =
+      await System.experimentalFeatures.liveSync.toggleFeature(!status);
     if (!updated) {
       showToast("Failed to update status of feature.", "error", {
         clear: true,
@@ -21,8 +20,7 @@ export default function LiveSyncToggle({ enabled = false, onToggle }) {
 
     setStatus(!status);
     showToast(
-      `Live document content sync has been ${
-        !status ? "enabled" : "disabled"
+      `Live document content sync has been ${!status ? "enabled" : "disabled"
       }.`,
       "success",
       { clear: true }
@@ -51,7 +49,7 @@ export default function LiveSyncToggle({ enabled = false, onToggle }) {
           <p className="text-white/90 text-sm">
             Enable the ability to specify a document to be "watched". Watched
             document's content will be regularly fetched and updated in
-            AnythingLLM.
+            OssorioiaLLM.
           </p>
           <p className="text-white/90 text-sm">
             Watched documents will automatically update in all workspaces they
@@ -70,6 +68,7 @@ export default function LiveSyncToggle({ enabled = false, onToggle }) {
               href="https://docs.ossorioia.com/beta-preview/active-features/live-document-sync"
               target="_blank"
               className="text-sm text-blue-400 hover:underline flex items-center gap-x-1"
+              rel="noreferrer"
             >
               <ArrowSquareOut size={14} />
               <span>Feature Documentation and Warnings</span>

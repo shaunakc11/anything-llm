@@ -20,8 +20,8 @@ const webBrowsing = {
               call: JSON.stringify({ query: "Winner of today's world series" }),
             },
             {
-              prompt: "What is AnythingLLM?",
-              call: JSON.stringify({ query: "AnythingLLM" }),
+              prompt: "What is OssorioIALLM?",
+              call: JSON.stringify({ query: "OssorioIALLM" }),
             },
             {
               prompt: "Current AAPL stock price",
@@ -101,8 +101,7 @@ const webBrowsing = {
             searchURL.searchParams.append("q", query);
 
             this.super.introspect(
-              `${this.caller}: Searching on Google for "${
-                query.length > 100 ? `${query.slice(0, 100)}...` : query
+              `${this.caller}: Searching on Google for "${query.length > 100 ? `${query.slice(0, 100)}...` : query
               }"`
             );
             const data = await fetch(searchURL)
@@ -144,8 +143,7 @@ const webBrowsing = {
             }
 
             this.super.introspect(
-              `${this.caller}: Using Serper.dev to search for "${
-                query.length > 100 ? `${query.slice(0, 100)}...` : query
+              `${this.caller}: Using Serper.dev to search for "${query.length > 100 ? `${query.slice(0, 100)}...` : query
               }"`
             );
             const { response, error } = await fetch(
@@ -203,8 +201,7 @@ const webBrowsing = {
             searchURL.searchParams.append("q", query);
 
             this.super.introspect(
-              `${this.caller}: Using Bing Web Search to search for "${
-                query.length > 100 ? `${query.slice(0, 100)}...` : query
+              `${this.caller}: Using Bing Web Search to search for "${query.length > 100 ? `${query.slice(0, 100)}...` : query
               }"`
             );
 
@@ -256,8 +253,7 @@ const webBrowsing = {
             }
 
             this.super.introspect(
-              `${this.caller}: Using Serply to search for "${
-                query.length > 100 ? `${query.slice(0, 100)}...` : query
+              `${this.caller}: Using Serply to search for "${query.length > 100 ? `${query.slice(0, 100)}...` : query
               }"`
             );
 
@@ -273,7 +269,7 @@ const webBrowsing = {
               headers: {
                 "X-API-KEY": process.env.AGENT_SERPLY_API_KEY,
                 "Content-Type": "application/json",
-                "User-Agent": "anything-llm",
+                "User-Agent": "ossorioia-llm",
                 "X-Proxy-Location": proxy_location,
                 "X-User-Agent": device_type,
               },
@@ -334,8 +330,7 @@ const webBrowsing = {
             }
 
             this.super.introspect(
-              `${this.caller}: Using SearXNG to search for "${
-                query.length > 100 ? `${query.slice(0, 100)}...` : query
+              `${this.caller}: Using SearXNG to search for "${query.length > 100 ? `${query.slice(0, 100)}...` : query
               }"`
             );
 
@@ -343,7 +338,7 @@ const webBrowsing = {
               method: "GET",
               headers: {
                 "Content-Type": "application/json",
-                "User-Agent": "anything-llm",
+                "User-Agent": "ossorioia-llm",
               },
             })
               .then((res) => res.json())

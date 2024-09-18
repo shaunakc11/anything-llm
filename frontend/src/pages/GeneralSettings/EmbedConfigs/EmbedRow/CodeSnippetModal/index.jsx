@@ -46,15 +46,13 @@ export default function CodeSnippetModal({ embed, closeModal }) {
 function createScriptTagSnippet(embed, scriptHost, serverHost) {
   return `<!--
 Paste this script at the bottom of your HTML before the </body> tag.
-See more style and config options on our docs
-https://github.com/Mintplex-Labs/anything-llm/tree/master/embed/README.md
 -->
 <script
   data-embed-id="${embed.uuid}"
   data-base-api-url="${serverHost}/api/embed"
-  src="${scriptHost}/embed/anythingllm-chat-widget.min.js">
+  src="${scriptHost}/embed/ossorioiallm-chat-widget.min.js">
 </script>
-<!-- AnythingLLM (https://ossorioia.com) -->
+<!-- OssorioiaLLM (https://ossorioia.com) -->
 `;
 }
 
@@ -87,13 +85,6 @@ const ScriptTag = ({ embed }) => {
           Have your workspace chat embed function like a help desk chat bottom
           in the corner of your website.
         </p>
-        <a
-          href="https://github.com/Mintplex-Labs/anything-llm/tree/master/embed/README.md"
-          target="_blank"
-          className="text-blue-300 hover:underline"
-        >
-          View all style and configuration options &rarr;
-        </a>
       </div>
       <button
         disabled={copied}

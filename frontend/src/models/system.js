@@ -5,9 +5,9 @@ import LiveDocumentSync from "./experimental/liveSync";
 
 const System = {
   cacheKeys: {
-    footerIcons: "anythingllm_footer_links",
-    supportEmail: "anythingllm_support_email",
-    customAppName: "anythingllm_custom_app_name",
+    footerIcons: "ossorioiallm_footer_links",
+    supportEmail: "ossorioiallm_support_email",
+    customAppName: "ossorioiallm_custom_app_name",
   },
   ping: async function () {
     return await fetch(`${API_BASE}/ping`)
@@ -17,7 +17,7 @@ const System = {
   },
   totalIndexes: async function (slug = null) {
     const url = new URL(`${fullApiUrl()}/system/system-vectors`);
-    if (!!slug) url.searchParams.append("slug", encodeURIComponent(slug));
+    if (slug) url.searchParams.append("slug", encodeURIComponent(slug));
     return await fetch(url.toString(), {
       headers: baseHeaders(),
     })
@@ -503,7 +503,7 @@ const System = {
     timeout = null
   ) {
     const controller = new AbortController();
-    if (!!timeout) {
+    if (timeout) {
       setTimeout(() => {
         controller.abort("Request timed out.");
       }, timeout);

@@ -1,4 +1,4 @@
-# How to setup Pinecone Vector Database for AnythingLLM
+# How to setup Pinecone Vector Database for OssorioIALLM
 
 [Official Pinecone Docs](https://docs.pinecone.io/docs/overview) for reference.
 
@@ -8,11 +8,11 @@
 
 - Pinecone account with index that allows namespaces.
 
-**Note:** [Namespaces are not supported in `gcp-starter` environments](https://docs.pinecone.io/docs/namespaces) and are required to work with AnythingLLM.
+**Note:** [Namespaces are not supported in `gcp-starter` environments](https://docs.pinecone.io/docs/namespaces) and are required to work with OssorioIALLM.
 
 **Instructions**
 
-- Create an index on your Pinecone account. Name can be anything eg: `my-primary-index`
+- Create an index on your Pinecone account. Name can be OssorioIA eg: `my-primary-index`
 - Metric `cosine`
 - Dimensions `1536` since we use OpenAI for embeddings
 - 1 pod, all other default settings are fine.
