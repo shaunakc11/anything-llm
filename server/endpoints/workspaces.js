@@ -117,6 +117,7 @@ function workspaceEndpoints(app) {
       try {
         const Collector = new CollectorApi();
         const { originalname } = request.file;
+        const { slug = null } = request.params;
         const processingOnline = await Collector.online();
         if (!processingOnline) {
           response
@@ -135,18 +136,49 @@ function workspaceEndpoints(app) {
           response.status(500).json({ success: false, error: reason }).end();
           return;
         }
-        let yearFinal = null
+        let yearFinal = null;
         if (request.body.year !== "") {
-          yearFinal = request.body.year
+          yearFinal = request.body.year;
         }
+
+        const document = documents[0];
+        const metadata = {
+          id: document.id,
+          url: document.url,
+          title: document.title,
+          docAuthor: document.docAuthor || "no author specified",
+          description: document.description || "no description found",
+          docSource: document.docSource || "no source set",
+          chunkSource: document.chunkSource || "no chunk source",
+          published: document.published || new Date().toISOString(),
+          wordCount: document.wordCount || 0,
+          token_count_estimate: document.token_count_estimate || 0,
+        };
+
+        // Convert metadata object to a JSON string for Prisma
+        const metadataString = JSON.stringify(metadata);
+
         await prisma.workspace_documents_year.create({
           data: {
             docId: documents[0].id,
             docpath: documents[0].url,
             filename: documents[0].title,
-            year: yearFinal
-          }
-        })
+            year: yearFinal,
+          },
+        });
+
+        const currWorkspace = await Workspace.get({ slug });
+
+        await prisma.workspace_documents.create({
+          data: {
+            docId: documents[0].id,
+            docpath: documents[0].url,
+            filename: documents[0].title,
+            workspaceId: currWorkspace.id,
+            workspace: currWorkspace,
+            metadata: metadataString,
+          },
+        });
 
         Collector.log(
           `Document ${originalname} uploaded processed and successfully. It is now available in documents.`
@@ -789,7 +821,7 @@ function workspaceEndpoints(app) {
 
         // Get threadId we are branching from if that request body is sent
         // and is a valid thread slug.
-        const threadId = !!threadSlug
+        const threadId = threadSlug
           ? (
             await WorkspaceThread.get({
               slug: String(threadSlug),
@@ -829,7 +861,7 @@ function workspaceEndpoints(app) {
         });
         await WorkspaceChats.bulkCreate(chatsData);
         await WorkspaceThread.update(newThread, {
-          name: !!lastMessageText
+          name: lastMessageText
             ? truncate(lastMessageText, 22)
             : "Forked Thread",
         });

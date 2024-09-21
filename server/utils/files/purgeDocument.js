@@ -9,6 +9,7 @@ const {
 } = require(".");
 const { Document } = require("../../models/documents");
 const { Workspace } = require("../../models/workspace");
+const prisma = require("../prisma");
 
 async function purgeDocument(filename = null) {
   if (!filename || !normalizePath(filename)) return;
@@ -18,6 +19,12 @@ async function purgeDocument(filename = null) {
   const workspaces = await Workspace.where();
   for (const workspace of workspaces) {
     await Document.removeDocuments(workspace, [filename]);
+    await prisma.workspace_documents.deleteMany({
+      where: {
+        workspace: workspace,
+        filename: filename,
+      },
+    });
   }
   return;
 }
