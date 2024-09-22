@@ -1,4 +1,5 @@
 const fs = require("fs");
+const fsPromise = require("fs/promises");
 const path = require("path");
 const { v5: uuidv5 } = require("uuid");
 const { Document } = require("../../models/documents");
@@ -25,77 +26,116 @@ async function fileData(filePath = null) {
 }
 
 async function viewLocalFiles() {
-  if (!fs.existsSync(documentsPath)) fs.mkdirSync(documentsPath);
+  try {
+    // Check if the directory exists before attempting to create it
+    await fsPromise.access(documentsPath);
+  } catch (error) {
+    // Directory does not exist, so create it
+    if (error.code === "ENOENT") {
+      await fsPromise.mkdir(documentsPath);
+    } else {
+      // If there's another error, rethrow it
+      throw error;
+    }
+  }
   const liveSyncAvailable = await DocumentSyncQueue.enabled();
+
   const directory = {
     name: "documents",
     type: "folder",
     items: [],
   };
 
-  for (const file of fs.readdirSync(documentsPath)) {
-    if (path.extname(file) === ".md") continue;
-    const folderPath = path.resolve(documentsPath, file);
-    const isFolder = fs.lstatSync(folderPath).isDirectory();
+  const files = await fsPromise.readdir(documentsPath);
 
-    if (isFolder) {
+  // Filter and process files asynchronously
+  const folders = await Promise.all(
+    files.map(async (file) => {
+      if (path.extname(file) === ".md") return null; // Skip .md files
+      const folderPath = path.resolve(documentsPath, file);
+      const isFolder = (await fsPromise.lstat(folderPath)).isDirectory();
+      if (!isFolder) return null;
+
+      // Read metadata if exists
+      const metadata = await readMetadata(folderPath);
+
+      // Process subfiles asynchronously
       const subdocs = {
         name: file,
         type: "folder",
-        items: [],
-        metadata: {},
+        items: await processSubFiles(folderPath, liveSyncAvailable),
+        metadata,
       };
 
-      // Read the metadata.json file if it exists
-      const metadataPath = path.join(folderPath, "metadata.json");
-      if (fs.existsSync(metadataPath)) {
-        const rawData = fs.readFileSync(metadataPath, "utf8");
-        const metadata = JSON.parse(rawData);
-        subdocs.metadata = metadata;
-      }
+      return subdocs;
+    })
+  );
 
-      const subfiles = fs.readdirSync(folderPath);
+  // Remove null entries (skipped files) and sort
+  directory.items = folders.filter((folder) => folder !== null);
 
-      for (const subfile of subfiles) {
-        if (path.extname(subfile) !== ".json" || subfile === "metadata.json")
-          continue;
-        const filePath = path.join(folderPath, subfile);
-        const rawData = fs.readFileSync(filePath, "utf8");
-        const cachefilename = `${file}/${subfile}`;
-        const { pageContent, ...metadata } = JSON.parse(rawData);
-        const pinnedInWorkspaces = await Document.getOnlyWorkspaceIds({
-          docpath: cachefilename,
-          pinned: true,
-        });
-        const watchedInWorkspaces = liveSyncAvailable
-          ? await Document.getOnlyWorkspaceIds({
-              docpath: cachefilename,
-              watched: true,
-            })
-          : [];
+  // Ensure custom-documents folder is first
+  directory.items.sort((a, b) => (a.name === "custom-documents" ? -1 : 1));
 
-        subdocs.items.push({
-          name: subfile,
-          type: "file",
-          ...metadata,
-          cached: await cachedVectorInformation(cachefilename, true),
-          pinnedWorkspaces: pinnedInWorkspaces,
-          canWatch: liveSyncAvailable
-            ? DocumentSyncQueue.canWatch(metadata)
-            : false,
-          watched: watchedInWorkspaces.length !== 0,
-        });
-      }
-      directory.items.push(subdocs);
-    }
-  }
-
-  // Make sure custom-documents is always the first folder in picker
-  directory.items = [
-    directory.items.find((folder) => folder.name === "custom-documents"),
-    ...directory.items.filter((folder) => folder.name !== "custom-documents"),
-  ].filter((i) => !!i);
   return directory;
+}
+
+async function readMetadata(folderPath) {
+  const metadataPath = path.join(folderPath, "metadata.json");
+  if (await fileExists(metadataPath)) {
+    const rawData = await fsPromise.readFile(metadataPath, "utf8");
+    return JSON.parse(rawData);
+  }
+  return {};
+}
+
+async function processSubFiles(folderPath, liveSyncAvailable) {
+  const subfiles = await fsPromise.readdir(folderPath);
+
+  return await Promise.all(
+    subfiles.map(async (subfile) => {
+      if (path.extname(subfile) !== ".json" || subfile === "metadata.json")
+        return null;
+
+      const filePath = path.join(folderPath, subfile);
+      const rawData = await fsPromise.readFile(filePath, "utf8");
+      const { pageContent, ...metadata } = JSON.parse(rawData);
+      const cachefilename = `${folderPath}/${subfile}`;
+
+      const pinnedInWorkspaces = await Document.getOnlyWorkspaceIds({
+        docpath: cachefilename,
+        pinned: true,
+      });
+
+      const watchedInWorkspaces = liveSyncAvailable
+        ? await Document.getOnlyWorkspaceIds({
+          docpath: cachefilename,
+          watched: true,
+        })
+        : [];
+
+      return {
+        name: subfile,
+        type: "file",
+        ...metadata,
+        cached: await cachedVectorInformation(cachefilename, true),
+        pinnedWorkspaces: pinnedInWorkspaces,
+        canWatch: liveSyncAvailable
+          ? DocumentSyncQueue.canWatch(metadata)
+          : false,
+        watched: watchedInWorkspaces.length !== 0,
+      };
+    })
+  );
+}
+
+async function fileExists(filePath) {
+  try {
+    await fsPromise.access(filePath);
+    return true;
+  } catch (e) {
+    return false;
+  }
 }
 
 // Searches the vector-cache folder for existing information so we dont have to re-embed a
@@ -224,7 +264,7 @@ function hasVectorCachedFiles() {
       fs.readdirSync(vectorCachePath)?.filter((name) => name.endsWith(".json"))
         .length !== 0
     );
-  } catch {}
+  } catch { }
   return false;
 }
 
