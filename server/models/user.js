@@ -154,6 +154,10 @@ const User = {
 
   get: async function (clause = {}) {
     try {
+      if (clause && clause.id) {
+        clause.id = String(clause.id);
+      }
+
       const user = await prisma.users.findFirst({ where: clause });
       return user ? this.filterFields({ ...user }) : null;
     } catch (error) {
@@ -165,6 +169,9 @@ const User = {
   // Returns user object with all fields
   _get: async function (clause = {}) {
     try {
+      if (clause && clause.id) {
+        clause.id = String(clause.id);
+      }
       const user = await prisma.users.findFirst({ where: clause });
       return user ? { ...user } : null;
     } catch (error) {
@@ -172,7 +179,6 @@ const User = {
       return null;
     }
   },
-
   count: async function (clause = {}) {
     try {
       const count = await prisma.users.count({ where: clause });
