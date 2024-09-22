@@ -13,6 +13,9 @@ import SettingsButton from "../SettingsButton";
 import ActiveWorkspaces from "./ActiveWorkspaces";
 import UploadedDocuments from "./UploadDocuments";
 import { useUploadedModel } from "./UploadDocuments/useUploadedModel";
+import UploadByYearModal, {
+  useNewYearModal,
+} from "../Modals/UploadByYearModal";
 
 export default function Sidebar() {
   const { user } = useUser();
@@ -28,6 +31,20 @@ export default function Sidebar() {
     showUploadModal: showUploadedModal,
     hideUploadModal: hideUploadModal,
   } = useUploadedModel();
+
+  const {
+    showing: showingNewYearModal,
+    showModal: showNewYearModal,
+    hideModal: hideNewYearModal,
+  } = useNewYearModal();
+
+  const [yearSubmitted, setYearSubmitted] = useState(false);
+
+  const handleYearSubmitted = () => {
+    setYearSubmitted(true);
+    hideNewYearModal();
+    showNewWsModal();
+  };
 
   return (
     <div>
@@ -67,7 +84,7 @@ export default function Sidebar() {
                 <div className="flex flex-col gap-x-2 items-center justify-center">
                   {(!user || user?.role !== "default") && (
                     <button
-                      onClick={showNewWsModal}
+                      onClick={showNewYearModal}
                       className="flex flex-grow w-full h-[44px] gap-x-2 py-[5px] px-2.5 mb-2 bg-white rounded-[8px] text-sidebar justify-center items-center hover:bg-opacity-80 transition-all duration-300"
                     >
                       <Plus size={18} weight="bold" />
@@ -88,6 +105,12 @@ export default function Sidebar() {
       </div>
       {showingNewWsModal && <NewWorkspaceModal hideModal={hideNewWsModal} />}
       {showingUploadModal && <UploadedDocuments hideModal={hideUploadModal} />}
+      {showingNewYearModal && (
+        <UploadByYearModal
+          hideModal={hideNewYearModal}
+          onYearSubmitted={handleYearSubmitted}
+        />
+      )}
     </div>
   );
 }
@@ -102,6 +125,12 @@ export function SidebarMobileHeader() {
     showModal: showNewWsModal,
     hideModal: hideNewWsModal,
   } = useNewWorkspaceModal();
+  const {
+    showing: showingNewYearModal,
+    showModal: showNewYearModal,
+    hideModal: hideNewYearModal,
+  } = useNewYearModal();
+  const [yearSubmitted, setYearSubmitted] = useState(false);
   const {
     show: showingUploadModal,
     showUploadModal: showUploadedModal,
@@ -124,6 +153,12 @@ export function SidebarMobileHeader() {
     handleBg();
   }, [showSidebar]);
 
+  const handleYearSubmitted = () => {
+    setYearSubmitted(true);
+    hideNewYearModal();
+    showNewWsModal();
+  };
+
   return (
     <>
       <div
@@ -136,14 +171,14 @@ export function SidebarMobileHeader() {
         >
           <List className="h-6 w-6" />
         </button>
-        <div className="flex gap-2 items-center">
+        <div className="flex gap-2 items-center mr-12">
           <img
             src={"/logo.jpeg"}
             alt="Logo"
             className="block mx-auto h-6 w-auto"
-            style={{ maxHeight: "40px", objectFit: "contain" }}
+            style={{ maxHeight: "20px", objectFit: "contain" }}
           />
-          <h1 className="text-2xl font-medium text-white">OssorioIA</h1>
+          <h1 className="text-xl font-medium text-white">OssorioIA</h1>
         </div>
       </div>
       <div
@@ -154,8 +189,8 @@ export function SidebarMobileHeader() {
       >
         <div
           className={`${showBgOverlay
-            ? "transition-all opacity-1"
-            : "transition-none opacity-0"
+              ? "transition-all opacity-1"
+              : "transition-none opacity-0"
             }  duration-500 fixed top-0 left-0 ${USER_BACKGROUND_COLOR} bg-opacity-75 w-screen h-screen`}
           onClick={() => setShowSidebar(false)}
         />
@@ -202,7 +237,7 @@ export function SidebarMobileHeader() {
                   <div className="flex gap-x-2 items-center justify-between">
                     {(!user || user?.role !== "default") && (
                       <button
-                        onClick={showNewWsModal}
+                        onClick={showNewYearModal}
                         className="flex flex-grow w-[75%] h-[44px] gap-x-2 py-[5px] px-4 bg-white rounded-lg text-sidebar justify-center items-center hover:bg-opacity-80 transition-all duration-300"
                       >
                         <Plus className="h-5 w-5" />
@@ -222,6 +257,12 @@ export function SidebarMobileHeader() {
           </div>
         </div>
         {showingNewWsModal && <NewWorkspaceModal hideModal={hideNewWsModal} />}
+        {showingNewYearModal && (
+          <UploadByYearModal
+            hideModal={hideNewYearModal}
+            onYearSubmitted={handleYearSubmitted}
+          />
+        )}
       </div>
     </>
   );

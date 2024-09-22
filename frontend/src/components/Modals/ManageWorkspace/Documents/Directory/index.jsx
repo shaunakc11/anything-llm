@@ -183,7 +183,7 @@ function Directory({
     setSelectedFile(null);
   };
   return (
-    <div className="px-8 pb-8">
+    <div className="pb-8">
       <div
         className="flex flex-col gap-y-6"
         style={{ maxWidth: !isUploadedDoc ? "43rem" : null }}
@@ -215,7 +215,7 @@ function Directory({
         </div>
 
         <div
-          className={`relative w-full bg-zinc-900 rounded-2xl overflow-x-auto ${isUploadedDoc ? "h-[600px]" : "h-[310px]"
+          className={`relative bg-zinc-900 rounded-2xl overflow-x-auto ${isUploadedDoc ? "h-[600px] w-[50vw]" : "h-[310px] w-full"
             }`}
         >
           <div className="w-max absolute top-0 left-0 right-0 z-10 rounded-t-2xl text-white/80 text-xs flex gap-3 p-4 border-b border-white/20 shadow-lg bg-zinc-900">
@@ -231,7 +231,7 @@ function Directory({
             className={`overflow-y-auto h-full ${filteredFiles.length > 0 ? "w-max" : "w-full"} pt-12`}
           >
             {loading ? (
-              <div className="w-full h-full flex items-center justify-center flex-col gap-y-5">
+              <div className=" absolute w-full h-full flex items-center justify-center flex-col gap-y-5">
                 <PreLoader />
                 <p className="text-white/80 text-sm font-semibold animate-pulse text-center w-1/3">
                   {loadingMessage}
