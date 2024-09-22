@@ -86,6 +86,7 @@ export default function WorkspaceFiles({ workspace }) {
     setHighlightWorkspace(false);
     await Workspace.modifyEmbeddings(workspace.slug, changesToSend)
       .then((res) => {
+        // eslint-disable-next-line no-extra-boolean-cast
         if (!!res.message) {
           showToast(`Error: ${res.message}`, "error", { clear: true });
           return;
@@ -104,29 +105,27 @@ export default function WorkspaceFiles({ workspace }) {
     await fetchKeys(true);
     setLoading(false);
     setLoadingMessage("");
-    window.location.reload()
+    window.location.reload();
   };
 
   if (!workspace) return null;
 
   return (
-    <div className="flex">
-      <WorkspaceDirectory
-        workspace={workspace}
-        files={workspaceDocs}
-        highlightWorkspace={highlightWorkspace}
-        loading={loading}
-        loadingMessage={loadingMessage}
-        setLoadingMessage={setLoadingMessage}
-        setLoading={setLoading}
-        fetchKeys={fetchKeys}
-        hasChanges={hasChanges}
-        saveChanges={updateWorkspace}
-        embeddingCosts={embeddingsCost}
-        movedItems={movedItems}
-        showWorkspaceName={false}
-        className={"px-1"}
-      />
-    </div>
+    <WorkspaceDirectory
+      workspace={workspace}
+      files={workspaceDocs}
+      highlightWorkspace={highlightWorkspace}
+      loading={loading}
+      loadingMessage={loadingMessage}
+      setLoadingMessage={setLoadingMessage}
+      setLoading={setLoading}
+      fetchKeys={fetchKeys}
+      hasChanges={hasChanges}
+      saveChanges={updateWorkspace}
+      embeddingCosts={embeddingsCost}
+      movedItems={movedItems}
+      showWorkspaceName={false}
+      className={"px-1"}
+    />
   );
 }

@@ -6,7 +6,6 @@ import { humanFileSize, milliToHms } from "../../../../../../utils/numbers";
 import PreLoader from "../../../../../Preloader";
 
 function FileUploadProgressComponent({
-  year,
   slug,
   uuid,
   file,
@@ -42,7 +41,6 @@ function FileUploadProgressComponent({
       const start = Number(new Date());
       const formData = new FormData();
       formData.append("file", file, file.name);
-      formData.append("year", year)
       const timer = setInterval(() => {
         setTimerMs(Number(new Date()) - start);
       }, 100);

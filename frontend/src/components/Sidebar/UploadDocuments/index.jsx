@@ -6,7 +6,7 @@ import { useParams } from "react-router-dom";
 import System from "../../../models/system";
 import Workspace from "../../../models/workspace";
 
-const noop = () => {};
+const noop = () => { };
 
 const UploadedDocuments = ({ hideModal = noop, providedSlug = null }) => {
   const { slug } = useParams();
