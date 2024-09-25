@@ -103,6 +103,7 @@ export default function DocumentSettings({
     setHighlightWorkspace(false);
     await Workspace.modifyEmbeddings(workspace.slug, changesToSend)
       .then((res) => {
+        // eslint-disable-next-line no-extra-boolean-cast
         if (!!res.message) {
           showToast(`Error: ${res.message}`, "error", { clear: true });
           return;
@@ -121,7 +122,7 @@ export default function DocumentSettings({
     await fetchKeys(true);
     setLoading(false);
     setLoadingMessage("");
-    window.location.reload()
+    window.location.reload();
   };
 
   const moveSelectedItemsToWorkspace = () => {
@@ -197,7 +198,7 @@ export default function DocumentSettings({
   };
 
   return (
-    <div className="flex upload-modal -mt-6 z-10 relative">
+    <div className="flex upload-modal -mt-6 z-10 relative px-10">
       <Directory
         files={availableDocs}
         setFiles={setAvailableDocs}

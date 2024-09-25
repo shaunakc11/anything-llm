@@ -136,14 +136,14 @@ export function SidebarMobileHeader() {
         >
           <List className="h-6 w-6" />
         </button>
-        <div className="flex gap-2 items-center">
+        <div className="flex gap-2 items-center mr-12">
           <img
             src={"/logo.jpeg"}
             alt="Logo"
             className="block mx-auto h-6 w-auto"
-            style={{ maxHeight: "40px", objectFit: "contain" }}
+            style={{ maxHeight: "20px", objectFit: "contain" }}
           />
-          <h1 className="text-2xl font-medium text-white">OssorioIA</h1>
+          <h1 className="text-xl font-medium text-white">OssorioIA</h1>
         </div>
       </div>
       <div
@@ -154,8 +154,8 @@ export function SidebarMobileHeader() {
       >
         <div
           className={`${showBgOverlay
-            ? "transition-all opacity-1"
-            : "transition-none opacity-0"
+              ? "transition-all opacity-1"
+              : "transition-none opacity-0"
             }  duration-500 fixed top-0 left-0 ${USER_BACKGROUND_COLOR} bg-opacity-75 w-screen h-screen`}
           onClick={() => setShowSidebar(false)}
         />
