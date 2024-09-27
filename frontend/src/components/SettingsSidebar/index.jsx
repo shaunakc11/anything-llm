@@ -57,14 +57,14 @@ export default function SettingsSidebar() {
   if (isMobile) {
     return (
       <>
-        <div className="fixed top-0 left-0 right-0 z-20 flex justify-between items-center px-4 py-2 bg-sidebar text-slate-200 shadow-lg h-16">
+        <div className="fixed top-0 left-0 right-0 z-20 flex items-center px-4 py-2 bg-sidebar text-slate-200 shadow-lg h-16">
           <button
             onClick={() => setShowSidebar(true)}
             className="rounded-md p-2 flex items-center justify-center text-slate-200"
           >
             <List className="h-6 w-6" />
           </button>
-          <div className="flex gap-2 items-center mr-12">
+          <div className="flex gap-2 items-center mx-auto">
             <img
               src={"/logo.jpeg"}
               alt="Logo"
