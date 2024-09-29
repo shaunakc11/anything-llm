@@ -85,21 +85,12 @@ function handleFileUpload(request, response, next) {
         params
       );
 
-      // Add condition to upload content if file type is text or markdown only
-      const fileExtension = path.extname(originalname).toLowerCase();
-      let content = null;
-
-      if (fileExtension === ".txt" || fileExtension === ".md") {
-        content = buffer.toString("utf-8");
-      }
-
       // Attach variables to the request object
       request.uploadedFile = {
         url: fileUploadUrl,
         filename: uniqueFilename,
         uuid: uuid,
         originalname: originalname,
-        content, // Will be null if not text or markdown
       };
 
       next();

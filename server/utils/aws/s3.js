@@ -6,6 +6,7 @@ const {
 const fs = require("fs");
 const path = require("path");
 
+//TODO: use common utils code for both collector and server
 async function streamToString(stream) {
   return new Promise((resolve, reject) => {
     const chunks = [];
@@ -15,6 +16,7 @@ async function streamToString(stream) {
   });
 }
 
+//TODO: use common service code for both collector and server
 class S3Service {
   constructor() {
     const region = process.env.AWS_REGION;

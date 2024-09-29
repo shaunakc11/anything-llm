@@ -119,28 +119,6 @@ function workspaceEndpoints(app) {
         const uploadedFile = request.uploadedFile;
         const { originalname } = request.file;
         const processingOnline = await Collector.online();
-        if (!processingOnline) {
-          response
-            .status(500)
-            .json({
-              success: false,
-              error: `Document processing API is not online. Document ${originalname} will not be processed automatically.`,
-            })
-            .end();
-          return;
-        }
-
-        const { success, reason, documents } = await Collector.processDocument(
-          originalname,
-          uploadedFile
-        );
-        if (!success) {
-          response.status(500).json({ success: false, error: reason }).end();
-          return;
-        }
-        // Assuming documents[0] contains the processed data
-        const doc = documents[0];
-
         let folder = await prisma.folder.findUnique({
           where: { name: request.body.folderName || "custom-documents" },
         });
@@ -160,24 +138,35 @@ function workspaceEndpoints(app) {
           });
         }
 
+        const publishedDate = new Date(); // Use the current date and time
+
         // Create file record in the database
-        await prisma.file.create({
+        const prismaResponse = await prisma.file.create({
           data: {
-            // id: doc.id,
-            url: doc.fileUploadUrl,
-            pageContentUrl: doc.pageContentUploadUrl,
-            title: doc.title,
-            docAuthor: doc.docAuthor,
-            description: doc.description,
-            docSource: doc.docSource,
-            chunkSource: doc.chunkSource,
-            published: new Date(doc.published), // Ensure this is a Date object
-            wordCount: doc.wordCount,
-            tokenCountEstimate: doc.token_count_estimate,
+            url: uploadedFile.url,
+            title: uploadedFile.originalname,
+            docAuthor: "Unknown",
+            description: "Unknown",
+            docSource: "a text file uploaded by the user.",
+            chunkSource: "",
+            published: new Date(publishedDate), // Ensure this is a Date object
             folderId: folder.id,
-            storageKey: doc.storageKey,
+            storageKey: uploadedFile.uuid,
           },
         });
+
+        if (!processingOnline) {
+          response
+            .status(500)
+            .json({
+              success: false,
+              error: `Document processing API is not online. Document ${originalname} will not be processed automatically.`,
+            })
+            .end();
+          return;
+        }
+
+        Collector.processDocument(originalname, prismaResponse);
 
         Collector.log(
           `Document ${originalname} uploaded processed and successfully. It is now available in documents.`
@@ -190,7 +179,7 @@ function workspaceEndpoints(app) {
           },
           response.locals?.user?.id
         );
-        response.status(200).json({ success: true, error: null });
+        return response.status(200).json({ success: true, error: null });
       } catch (e) {
         console.error(e.message, e);
         response.sendStatus(500).end();
