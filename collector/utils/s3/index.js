@@ -1,7 +1,22 @@
-const { S3Client, PutObjectCommand } = require("@aws-sdk/client-s3");
+const {
+  S3Client,
+  PutObjectCommand,
+  GetObjectCommand,
+} = require("@aws-sdk/client-s3");
 const fs = require("fs");
 const path = require("path");
 
+//TODO: use common utils for both collector and server
+async function streamToString(stream) {
+  return new Promise((resolve, reject) => {
+    const chunks = [];
+    stream.on("data", (chunk) => chunks.push(chunk));
+    stream.on("error", reject);
+    stream.on("end", () => resolve(Buffer.concat(chunks).toString("utf8")));
+  });
+}
+
+//TODO: use common service for both collector and server
 class S3Service {
   constructor() {
     const region = process.env.AWS_REGION;
@@ -56,6 +71,21 @@ class S3Service {
       return fileUrl;
     } catch (error) {
       this.#log("Error uploading file:", error);
+      throw error;
+    }
+  }
+
+  async getObject(params) {
+    try {
+      const command = new GetObjectCommand(params);
+      const response = await this.s3.send(command);
+
+      // Convert the stream to a string
+      const bodyContents = await streamToString(response.Body);
+      this.#log(`File downloaded successfully from S3`);
+      return bodyContents;
+    } catch (error) {
+      this.#log("Error downloading file:", error);
       throw error;
     }
   }

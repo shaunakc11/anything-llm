@@ -6,6 +6,8 @@ const {
 } = require("@aws-sdk/client-textract");
 const path = require("path");
 
+const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
 class TextractService {
   constructor() {
     const region = process.env.AWS_REGION;
@@ -27,6 +29,76 @@ class TextractService {
 
   #log(text, ...args) {
     console.log(`\x1b[34m[TextractService]\x1b[0m ${text}`, ...args);
+  }
+
+  async #startJob(s3BucketName, objectName) {
+    const command = new StartDocumentTextDetectionCommand({
+      DocumentLocation: {
+        S3Object: {
+          Bucket: s3BucketName,
+          Name: objectName,
+        },
+      },
+    });
+    const response = await this.textract.send(command);
+    return response.JobId;
+  }
+
+  async #getJobStatus(jobId) {
+    const params = { JobId: jobId };
+    const command = new GetDocumentTextDetectionCommand(params);
+    const response = await this.textract.send(command);
+    return response;
+  }
+
+  async #isJobComplete(jobId) {
+    await sleep(1000);
+    let status = "IN_PROGRESS";
+    let response = await this.#getJobStatus(jobId);
+
+    console.log(`Job status: ${response.JobStatus}`);
+    status = response.JobStatus;
+
+    while (status === "IN_PROGRESS") {
+      await sleep(1000);
+      response = await this.#getJobStatus(jobId);
+      status = response.JobStatus;
+      console.log(`Job status: ${status}`);
+    }
+
+    return status === "SUCCEEDED";
+  }
+
+  async #getJobResults(jobId) {
+    const pages = [];
+    await sleep(1000);
+    let response = await this.#getJobStatus(jobId);
+    const totalPages = response.DocumentMetadata.Pages;
+
+    pages.push(response);
+
+    console.log(`Resultset page received: ${pages.length}`);
+
+    while (pages.length < totalPages) {
+      await sleep(1000);
+      response = await this.#getJobStatus(jobId);
+      pages.push(response);
+      console.log(`Resultset page received: ${pages.length}`);
+    }
+
+    return pages;
+  }
+
+  #getDetectedText(response) {
+    let extractedText = "";
+    response.forEach((resultPage) => {
+      resultPage.Blocks.forEach((item) => {
+        if (item.BlockType === "LINE") {
+          extractedText += item.Text;
+        }
+      });
+    });
+    return extractedText;
   }
 
   async analyzeS3Document(bucketName, documentKey) {
@@ -73,43 +145,17 @@ class TextractService {
 
   async #processPdfFromS3(bucketName, documentKey) {
     try {
-      const startParams = {
-        DocumentLocation: {
-          S3Object: {
-            Bucket: bucketName,
-            Name: documentKey,
-          },
-        },
-      };
-
-      const startCommand = new StartDocumentTextDetectionCommand(startParams);
-      const startResponse = await this.textract.send(startCommand);
-
-      const jobId = startResponse.JobId;
+      const jobId = await this.#startJob(bucketName, documentKey);
       this.#log("Job started for PDF processing:", jobId);
 
-      let jobStatus = "IN_PROGRESS";
-      let data;
-      while (jobStatus === "IN_PROGRESS") {
-        await new Promise((resolve) => setTimeout(resolve, 5000));
-        const getParams = { JobId: jobId };
-        const getCommand = new GetDocumentTextDetectionCommand(getParams);
-        data = await this.textract.send(getCommand);
-        jobStatus = data.JobStatus;
-      }
+      const isComplete = await this.#isJobComplete(jobId);
 
-      if (jobStatus === "SUCCEEDED") {
-        const extractedText = data.Blocks.filter(
-          (block) => block.BlockType === "LINE"
-        )
-          .map((block) => block.Text)
-          .join("\n");
-
-        this.#log("Text Extracted Successfully from S3 PDF");
-        return extractedText;
-      } else {
+      if (!isComplete) {
         throw new Error("Failed to process PDF.");
       }
+
+      const response = await this.#getJobResults(jobId);
+      return this.#getDetectedText(response);
     } catch (error) {
       this.#log("Error processing PDF from S3:", error);
       throw error;

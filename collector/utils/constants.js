@@ -7,22 +7,22 @@ const ACCEPTED_MIMES = {
   "application/vnd.openxmlformats-officedocument.wordprocessingml.document": [
     ".docx",
   ],
-  "application/vnd.openxmlformats-officedocument.presentationml.presentation": [
-    ".pptx",
-  ],
+  // "application/vnd.openxmlformats-officedocument.presentationml.presentation": [
+  //   ".pptx",
+  // ],
 
-  "application/vnd.oasis.opendocument.text": [".odt"],
-  "application/vnd.oasis.opendocument.presentation": [".odp"],
+  // "application/vnd.oasis.opendocument.text": [".odt"],
+  // "application/vnd.oasis.opendocument.presentation": [".odp"],
 
   "application/pdf": [".pdf"],
-  "application/mbox": [".mbox"],
+  // "application/mbox": [".mbox"],
 
-  "audio/wav": [".wav"],
-  "audio/mpeg": [".mp3"],
+  // "audio/wav": [".wav"],
+  // "audio/mpeg": [".mp3"],
 
-  "video/mp4": [".mp4"],
-  "video/mpeg": [".mpeg"],
-  "application/epub+zip": [".epub"],
+  // "video/mp4": [".mp4"],
+  // "video/mpeg": [".mpeg"],
+  // "application/epub+zip": [".epub"],
 };
 
 const SUPPORTED_FILETYPE_CONVERTERS = {
@@ -41,19 +41,19 @@ const SUPPORTED_FILETYPE_CONVERTERS = {
   // ".pdf": "./convert/asPDF.js",
 
   ".docx": "./convert/asDocx.js",
-  ".pptx": "./convert/asOfficeMime.js",
+  // ".pptx": "./convert/asOfficeMime.js",
 
-  ".odt": "./convert/asOfficeMime.js",
-  ".odp": "./convert/asOfficeMime.js",
+  // ".odt": "./convert/asOfficeMime.js",
+  // ".odp": "./convert/asOfficeMime.js",
 
-  ".mbox": "./convert/asMbox.js",
+  // ".mbox": "./convert/asMbox.js",
 
-  ".epub": "./convert/asEPub.js",
+  // ".epub": "./convert/asEPub.js",
 
-  ".mp3": "./convert/asAudio.js",
-  ".wav": "./convert/asAudio.js",
-  ".mp4": "./convert/asAudio.js",
-  ".mpeg": "./convert/asAudio.js",
+  // ".mp3": "./convert/asAudio.js",
+  // ".wav": "./convert/asAudio.js",
+  // ".mp4": "./convert/asAudio.js",
+  // ".mpeg": "./convert/asAudio.js",
 };
 
 module.exports = {
