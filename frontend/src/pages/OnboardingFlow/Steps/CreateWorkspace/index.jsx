@@ -1,10 +1,11 @@
-import React, { useEffect, useRef, useState } from "react";
 import illustration from "@/media/illustrations/create-workspace.png";
+import Workspace from "@/models/workspace";
+import { CURRENT_YEAR } from "@/utils/constants";
 import paths from "@/utils/paths";
 import showToast from "@/utils/toast";
-import { useNavigate } from "react-router-dom";
-import Workspace from "@/models/workspace";
+import React, { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 
 const TITLE = "Create your first workspace";
 const DESCRIPTION =
@@ -38,6 +39,7 @@ export default function CreateWorkspace({
     const form = new FormData(e.target);
     const { workspace, error } = await Workspace.new({
       name: form.get("name"),
+      year: CURRENT_YEAR,
       onboardingComplete: true,
     });
     if (!!workspace) {

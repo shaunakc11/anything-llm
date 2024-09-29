@@ -29,7 +29,7 @@ const Workspace = {
     "queryRefusalResponse",
   ],
 
-  new: async function (name = null, creatorId = null) {
+  new: async function (name = null, creatorId = null, year = null) {
     if (!name) return { result: null, message: "name cannot be null" };
     var slug = slugify(name, { lower: true });
     slug = slug || uuidv4();
@@ -42,7 +42,7 @@ const Workspace = {
 
     try {
       const workspace = await prisma.workspaces.create({
-        data: { name, slug },
+        data: { name, slug, year },
       });
 
       // If created with a user then we need to create the relationship as well.

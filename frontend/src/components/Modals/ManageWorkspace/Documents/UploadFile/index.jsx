@@ -2,13 +2,14 @@ import { CloudArrowUp } from "@phosphor-icons/react";
 import debounce from "lodash.debounce";
 import { useEffect, useRef, useState } from "react";
 import { useDropzone } from "react-dropzone";
+import { useTranslation } from "react-i18next";
 import { v4 } from "uuid";
 import System from "../../../../../models/system";
 import Workspace from "../../../../../models/workspace";
 import showToast from "../../../../../utils/toast";
 import FileUploadProgress from "./FileUploadProgress";
-import { useTranslation } from "react-i18next";
 
+//TODO: remove upload by year
 export default function UploadFile({
   workspace,
   fetchKeys,
@@ -136,8 +137,9 @@ export default function UploadFile({
   return (
     <div className="flex flex-col items-center">
       <div
-        className={`w-[280px] border-2 border-dashed rounded-2xl bg-zinc-900/50 p-3 ${ready ? "cursor-pointer" : "cursor-not-allowed"
-          } hover:bg-zinc-900/90`}
+        className={`w-[280px] border-2 border-dashed rounded-2xl bg-zinc-900/50 p-3 ${
+          ready ? "cursor-pointer" : "cursor-not-allowed"
+        } hover:bg-zinc-900/90`}
         {...getRootProps()}
         onClick={modalClick}
         style={{ minWidth: !isUploadedDoc ? "41.3rem" : "3rem" }}

@@ -1,7 +1,8 @@
-import React, { useRef, useState } from "react";
-import { X } from "@phosphor-icons/react";
 import Workspace from "@/models/workspace";
+import { CURRENT_YEAR } from "@/utils/constants";
 import paths from "@/utils/paths";
+import { X } from "@phosphor-icons/react";
+import React, { useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 const noop = () => false;
@@ -56,10 +57,31 @@ export default function NewWorkspaceModal({ hideModal = noop }) {
                     name="name"
                     type="text"
                     id="name"
-                    className="bg-zinc-900 w-full text-white placeholder:text-white/20 text-sm rounded-lg focus:border-white block w-full p-2.5"
+                    className="bg-zinc-900 w-full text-white placeholder:text-white/20 text-sm rounded-lg focus:border-white block p-2.5"
                     placeholder={t("dashboard.mySpace")}
                     required={true}
                     autoComplete="off"
+                  />
+                </div>
+                <div>
+                  <label
+                    htmlFor="year"
+                    className="block mb-2 text-sm font-medium text-white"
+                  >
+                    {t("dashboard.year")}
+                  </label>
+                  <input
+                    name="year"
+                    type="number"
+                    id="year"
+                    className="bg-zinc-900 w-full text-white placeholder:text-white/20 text-sm rounded-lg focus:border-white block p-2.5"
+                    placeholder={t("dashboard.myYear")}
+                    required={true}
+                    autoComplete="off"
+                    min={2000}
+                    max={CURRENT_YEAR}
+                    maxLength={4}
+                    step={1}
                   />
                 </div>
                 {error && (
