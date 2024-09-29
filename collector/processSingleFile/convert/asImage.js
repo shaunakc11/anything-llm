@@ -2,7 +2,9 @@ const path = require("path");
 const { tokenizeString } = require("../../utils/tokenizer");
 const { S3Service } = require("../../utils/s3");
 const { TextractService } = require("../../utils/textract");
+const prisma = require("../../utils/prisma");
 
+//TODO: remove unused variables
 async function asImage({ fullFilePath = "", filename = "", uploadedFile }) {
   const BUCKET_NAME = process.env.S3_BUCKET_NAME;
   if (!BUCKET_NAME) {
@@ -12,18 +14,18 @@ async function asImage({ fullFilePath = "", filename = "", uploadedFile }) {
     };
   }
   try {
-    console.log(`-- Working ${filename} --`);
+    console.log(`-- Working ${uploadedFile.title} --`);
     const s3Service = new S3Service();
     const textractService = new TextractService();
 
     const extractedText = await textractService.analyzeS3Document(
       BUCKET_NAME,
-      uploadedFile.filename
+      `${uploadedFile.storageKey}-${uploadedFile.title}`
     );
-    const fileNameWithoutExt = path.parse(filename).name;
+    const fileNameWithoutExt = path.parse(uploadedFile.title).name;
     const pageContentParams = {
       Bucket: BUCKET_NAME,
-      Key: `pageContents/${uploadedFile.uuid}-${fileNameWithoutExt}.txt`,
+      Key: `pageContents/${uploadedFile.storageKey}-${fileNameWithoutExt}.txt`,
       Body: extractedText,
     };
 
@@ -34,23 +36,16 @@ async function asImage({ fullFilePath = "", filename = "", uploadedFile }) {
       pageContentParams
     );
 
-    const publishedDate = new Date(); // Use the current date and time
-
-    const data = {
-      url: uploadedFile.url,
-      storageKey: uploadedFile.uuid,
-      title: uploadedFile.originalname,
-      pageContentUploadUrl: pageContentUploadUrl,
-      fileUploadUrl: uploadedFile.url,
-      docAuthor: "Unknown",
-      description: "Unknown",
-      docSource: "img file uploaded by the user.",
-      chunkSource: "",
-      published: publishedDate,
-      wordCount: extractedText.split(" ").length,
-      pageContent: extractedText,
-      token_count_estimate: tokenizeString(extractedText).length,
-    };
+    const data = await prisma.file.update({
+      data: {
+        pageContentUrl: pageContentUploadUrl,
+        wordCount: extractedText.split(" ").length,
+        tokenCountEstimate: tokenizeString(extractedText).length,
+      },
+      where: {
+        id: uploadedFile.id,
+      },
+    });
 
     return { success: true, reason: null, documents: [data] };
   } catch (error) {

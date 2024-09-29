@@ -1,7 +1,9 @@
 const path = require("path");
 const { tokenizeString } = require("../../utils/tokenizer");
 const { S3Service } = require("../../utils/s3");
+const prisma = require("../../utils/prisma");
 
+//TODO: remove unused variables
 async function asTxt({ fullFilePath = "", filename = "", uploadedFile }) {
   const bucketName = process.env.S3_BUCKET_NAME;
   if (!bucketName) {
@@ -13,13 +15,17 @@ async function asTxt({ fullFilePath = "", filename = "", uploadedFile }) {
   console.log(`-- Working ${filename} --`);
 
   const s3Service = new S3Service();
+  const fileContents = await s3Service.getObject({
+    Bucket: bucketName,
+    Key: `${uploadedFile.storageKey}-${uploadedFile.title}`,
+  });
 
-  const fileNameWithoutExt = path.parse(uploadedFile.originalname).name;
+  const fileNameWithoutExt = path.parse(uploadedFile.title).name;
 
   const pageContentParams = {
     Bucket: bucketName,
-    Key: `pageContents/${uploadedFile.uuid}-${fileNameWithoutExt}.txt`,
-    Body: uploadedFile.content,
+    Key: `pageContents/${uploadedFile.storageKey}-${fileNameWithoutExt}.txt`,
+    Body: fileContents,
   };
 
   const pageContentUploadUrl = await s3Service.uploadFileToS3(
@@ -29,26 +35,19 @@ async function asTxt({ fullFilePath = "", filename = "", uploadedFile }) {
     pageContentParams
   );
 
-  const publishedDate = new Date(); // Use the current date and time
-
-  const data = {
-    url: uploadedFile.url,
-    storageKey: uploadedFile.uuid,
-    title: uploadedFile.originalname,
-    pageContentUploadUrl: pageContentUploadUrl,
-    fileUploadUrl: uploadedFile.url,
-    docAuthor: "Unknown",
-    description: "Unknown",
-    docSource: "a text file uploaded by the user.",
-    chunkSource: "",
-    published: publishedDate,
-    wordCount: uploadedFile.content.split(" ").length,
-    pageContent: uploadedFile.content,
-    token_count_estimate: tokenizeString(uploadedFile.content).length,
-  };
+  const data = await prisma.file.update({
+    data: {
+      pageContentUrl: pageContentUploadUrl,
+      wordCount: fileContents.split(" ").length,
+      tokenCountEstimate: tokenizeString(fileContents).length,
+    },
+    where: {
+      id: uploadedFile.id,
+    },
+  });
 
   console.log(
-    `[SUCCESS]: ${uploadedFile.originalname} converted & ready for embedding.\n`
+    `[SUCCESS]: ${uploadedFile.title} converted & ready for embedding.\n`
   );
   return { success: true, reason: null, documents: [data] };
 }

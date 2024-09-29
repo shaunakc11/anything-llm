@@ -1,8 +1,9 @@
 const path = require("path");
 const { SUPPORTED_FILETYPE_CONVERTERS } = require("../utils/constants");
 
+//TODO: remove unused variables
 async function processSingleFile(targetFilename, uploadedFile, options = {}) {
-  const fileExtension = path.parse(uploadedFile.originalname).ext;
+  const fileExtension = path.parse(uploadedFile.title).ext;
 
   if (!fileExtension) {
     return {
@@ -26,7 +27,7 @@ async function processSingleFile(targetFilename, uploadedFile, options = {}) {
   ]);
   return await FileTypeProcessor({
     fullFilePath: undefined,
-    filename: uploadedFile.originalname,
+    filename: uploadedFile.title,
     uploadedFile,
     options,
   });
