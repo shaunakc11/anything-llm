@@ -13,7 +13,7 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = "postgresql://anything-llm-db_owner:FDWdgpPcY0M8@ep-plain-sun-a5dkvlj5.us-east-2.aws.neon.tech/anything-llm-db?sslmode=require"
+  url      = env("DATABASE_URL")
 }
 
 model api_keys {
@@ -326,15 +326,15 @@ model file {
   id                 String   @id @default(uuid())
   storageKey         String @unique
   url                String
-  pageContentUrl     String
+  pageContentUrl     String?
   title              String
   docAuthor          String
   description        String
   docSource          String
   chunkSource        String
   published          DateTime
-  wordCount          Int
-  tokenCountEstimate Int
+  wordCount          Int?
+  tokenCountEstimate Int?
   folderId           String
   folder             folder   @relation("folderfiles", fields: [folderId], references: [id])
   createdAt          DateTime @default(now())
