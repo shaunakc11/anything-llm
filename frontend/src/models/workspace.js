@@ -1,9 +1,9 @@
+import WorkspaceThread from "@/models/workspaceThread";
+import { ABORT_STREAM_EVENT } from "@/utils/chat";
 import { API_BASE } from "@/utils/constants";
 import { baseHeaders } from "@/utils/request";
 import { fetchEventSource } from "@microsoft/fetch-event-source";
-import WorkspaceThread from "@/models/workspaceThread";
 import { v4 } from "uuid";
-import { ABORT_STREAM_EVENT } from "@/utils/chat";
 
 const Workspace = {
   new: async function (data = {}) {
