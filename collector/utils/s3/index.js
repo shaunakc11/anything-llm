@@ -75,14 +75,15 @@ class S3Service {
     }
   }
 
-  async getObject(params) {
+  async getObject(params, shouldConvertToString = true) {
     try {
       const command = new GetObjectCommand(params);
       const response = await this.s3.send(command);
+      this.#log(`File downloaded successfully from S3`);
 
+      if (!shouldConvertToString) return response.Body;
       // Convert the stream to a string
       const bodyContents = await streamToString(response.Body);
-      this.#log(`File downloaded successfully from S3`);
       return bodyContents;
     } catch (error) {
       this.#log("Error downloading file:", error);

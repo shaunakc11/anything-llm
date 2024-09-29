@@ -75,7 +75,7 @@ function handleFileUpload(request, response, next) {
         Bucket: bucketName,
         Key: uniqueFilename,
         Body: buffer,
-        // ContentType: request.file.mimetype, // Set the ContentType
+        ContentType: request.file.mimetype, // Set the ContentType
       };
 
       const fileUploadUrl = await s3Service.uploadFileToS3(
