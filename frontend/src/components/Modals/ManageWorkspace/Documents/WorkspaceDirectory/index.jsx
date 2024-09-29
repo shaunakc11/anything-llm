@@ -49,7 +49,7 @@ function WorkspaceDirectory({
 
   return (
     <>
-      <div className={showWorkspaceName ? "px-8" : "px-1"}>
+      <div className={showWorkspaceName ? "" : "px-1"}>
         {showWorkspaceName && (
           <div className="flex items-center justify-start w-[560px]">
             <h3 className="text-white text-base font-bold ml-5">
@@ -58,7 +58,7 @@ function WorkspaceDirectory({
           </div>
         )}
         <div
-          className={`relative w-[560px] bg-zinc-900 rounded-2xl mt-4 overflow-y-auto border-4 ${
+          className={`relative lg:w-[560px] md:w-[280px] bg-zinc-900 rounded-2xl mt-4 overflow-y-auto border-4 ${
             (highlightWorkspace ? "border-cyan-300/80" : "border-transparent",
             showWorkspaceName ? "h-[445px]" : "h-[95vh]")
           }`}
@@ -200,7 +200,7 @@ const DocumentWatchAlert = memo(() => {
   }
 
   function handlePinEvent() {
-    if (!!window?.localStorage?.getItem(SEEN_WATCH_ALERT)) return;
+    if (window?.localStorage?.getItem(SEEN_WATCH_ALERT)) return;
     setShowAlert(true);
   }
 

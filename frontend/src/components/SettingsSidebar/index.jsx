@@ -57,21 +57,21 @@ export default function SettingsSidebar() {
   if (isMobile) {
     return (
       <>
-        <div className="fixed top-0 left-0 right-0 z-20 flex justify-between items-center px-4 py-2 bg-sidebar text-slate-200 shadow-lg h-16">
+        <div className="fixed top-0 left-0 right-0 z-20 flex items-center px-4 py-2 bg-sidebar text-slate-200 shadow-lg h-16">
           <button
             onClick={() => setShowSidebar(true)}
             className="rounded-md p-2 flex items-center justify-center text-slate-200"
           >
             <List className="h-6 w-6" />
           </button>
-          <div className="flex gap-2 items-center">
+          <div className="flex gap-2 items-center mx-auto">
             <img
               src={"/logo.jpeg"}
               alt="Logo"
               className="block mx-auto h-6 w-auto"
-              style={{ maxHeight: "40px", objectFit: "contain" }}
+              style={{ maxHeight: "20px", objectFit: "contain" }}
             />
-            <h1 className="text-2xl font-medium text-white">OssorioIA</h1>
+            <h1 className="text-xl font-medium text-white">OssorioIA</h1>
           </div>
         </div>
         <div
@@ -81,10 +81,11 @@ export default function SettingsSidebar() {
           className={`z-99 fixed top-0 left-0 transition-all duration-500 w-[100vw] h-[100vh]`}
         >
           <div
-            className={`${showBgOverlay
-              ? "transition-all opacity-1"
-              : "transition-none opacity-0"
-              }  duration-500 fixed top-0 left-0 ${USER_BACKGROUND_COLOR} bg-opacity-75 w-screen h-screen`}
+            className={`${
+              showBgOverlay
+                ? "transition-all opacity-1"
+                : "transition-none opacity-0"
+            }  duration-500 fixed top-0 left-0 ${USER_BACKGROUND_COLOR} bg-opacity-75 w-screen h-screen`}
             onClick={() => setShowSidebar(false)}
           />
           <div
@@ -200,10 +201,11 @@ const Option = ({
           transition-all duration-[200ms]
           flex flex-grow w-[75%] gap-x-2 py-[6px] px-[12px] rounded-[4px] justify-start items-center
           hover:bg-workspace-item-selected-gradient hover:text-white hover:font-medium
-          ${isActive
+          ${
+            isActive
               ? "bg-menu-item-selected-gradient font-medium border-outline text-white"
               : "hover:bg-menu-item-selected-gradient text-zinc-200"
-            }
+          }
         `}
         >
           {React.cloneElement(icon, { weight: isActive ? "fill" : "regular" })}
@@ -214,8 +216,9 @@ const Option = ({
       </div>
       {!!subOptions && (isActive || hasActiveChild) && (
         <div
-          className={`ml-4 ${hasActiveChild ? "" : "border-l-2 border-slate-400"
-            } rounded-r-lg`}
+          className={`ml-4 ${
+            hasActiveChild ? "" : "border-l-2 border-slate-400"
+          } rounded-r-lg`}
         >
           {subOptions}
         </div>
