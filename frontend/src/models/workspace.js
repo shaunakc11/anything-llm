@@ -1,15 +1,16 @@
 import WorkspaceThread from "@/models/workspaceThread";
 import { ABORT_STREAM_EVENT } from "@/utils/chat";
-import { API_BASE } from "@/utils/constants";
+import { API_BASE, CURRENT_YEAR } from "@/utils/constants";
 import { baseHeaders } from "@/utils/request";
 import { fetchEventSource } from "@microsoft/fetch-event-source";
 import { v4 } from "uuid";
 
 const Workspace = {
   new: async function (data = {}) {
+    const year = data?.year ? +data.year : CURRENT_YEAR;
     const { workspace, message } = await fetch(`${API_BASE}/workspace/new`, {
       method: "POST",
-      body: JSON.stringify(data),
+      body: JSON.stringify({ ...data, year }),
       headers: baseHeaders(),
     })
       .then((res) => res.json())
