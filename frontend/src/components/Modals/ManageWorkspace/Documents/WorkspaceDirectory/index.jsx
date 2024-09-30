@@ -58,10 +58,9 @@ function WorkspaceDirectory({
           </div>
         )}
         <div
-          className={`relative lg:w-[560px] md:w-[280px] bg-zinc-900 rounded-2xl mt-4 overflow-y-auto border-4 ${
-            (highlightWorkspace ? "border-cyan-300/80" : "border-transparent",
-            showWorkspaceName ? "h-[445px]" : "h-[95vh]")
-          }`}
+          className={`relative lg:w-[560px] md:w-[280px] bg-zinc-900 rounded-2xl mt-4 overflow-y-auto border-4 ${(highlightWorkspace ? "border-cyan-300/80" : "border-transparent",
+              showWorkspaceName ? "h-[445px]" : "h-[95vh]")
+            }`}
         >
           <div className="text-white/80 text-xs grid grid-cols-12 py-2 px-8 border-b border-white/20 bg-zinc-900 sticky top-0 z-10">
             <p className="col-span-5">Name</p>
@@ -103,11 +102,10 @@ function WorkspaceDirectory({
               <p className="text-sm font-semibold">
                 {embeddingCosts === 0
                   ? ""
-                  : `Estimated Cost: ${
-                      embeddingCosts < 0.01
-                        ? `< $0.01`
-                        : dollarFormat(embeddingCosts)
-                    }`}
+                  : `Estimated Cost: ${embeddingCosts < 0.01
+                    ? `< $0.01`
+                    : dollarFormat(embeddingCosts)
+                  }`}
               </p>
               <p className="mt-2 text-xs italic" hidden={embeddingCosts === 0}>
                 *One time cost for embeddings
@@ -116,7 +114,8 @@ function WorkspaceDirectory({
 
             <button
               onClick={saveChanges}
-              className="border border-slate-200 px-5 py-2.5 rounded-lg text-white text-sm items-center flex gap-x-2 hover:bg-slate-200 hover:text-slate-800 focus:ring-gray-800"
+              disabled={files.length < 1}
+              className="border border-slate-200 px-5 py-2.5 rounded-lg text-white text-sm items-center flex gap-x-2 hover:bg-slate-200 hover:text-slate-800 focus:ring-gray-800 disabled:cursor-not-allowed"
             >
               Save and Embed
             </button>

@@ -9,7 +9,7 @@ import {
   SquaresFour,
   UploadSimple,
 } from "@phosphor-icons/react";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import * as Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import { Link, useMatch, useParams } from "react-router-dom";
@@ -53,6 +53,7 @@ export default function ActiveWorkspaces() {
   const { showing, showModal, hideModal } = useManageWorkspaceModal();
   const { user } = useUser();
   const isInWorkspaceSettings = !!useMatch("/workspace/:slug/settings/:tab");
+  const activeWorkspaceRef = useRef(null);
 
   useEffect(() => {
     async function getWorkspaces() {
@@ -71,6 +72,12 @@ export default function ActiveWorkspaces() {
     }
     getWorkspaces();
   }, []);
+
+  useEffect(() => {
+    if (activeWorkspaceRef.current) {
+      activeWorkspaceRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [groupedWorkspaces, slug]);
 
   const handleMouseEnter = useCallback((workspaceId) => {
     setHoverStates((prev) => ({ ...prev, [workspaceId]: true }));
@@ -190,6 +197,7 @@ export default function ActiveWorkspaces() {
                             onMouseEnter={() => handleMouseEnter(workspace.id)}
                             onMouseLeave={() => handleMouseLeave(workspace.id)}
                             key={workspace.id}
+                            ref={isActive ? activeWorkspaceRef : null}
                             role="listitem"
                           >
                             <div

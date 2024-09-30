@@ -108,8 +108,7 @@ const TRANSLATIONS = {
     },
     upload: {
       title: "Click to upload or drag and drop",
-      description:
-        "supports text files, csv's, spreadsheets, audio files, and more!",
+      description: "Supports text files, PDFs, images, and DOCX documents",
     },
     info: "These files will be uploaded to the document processor running on this LLM instance. These files are not sent or shared with a third party.",
   },
@@ -299,13 +298,15 @@ const TRANSLATIONS = {
       },
       web: {
         title: "Live web search and browsing",
-        description: "Enable your agent to search the web to answer your questions by connecting to a web-search (SERP) provider. Web search during agent sessions will not work until this is set up.",
+        description:
+          "Enable your agent to search the web to answer your questions by connecting to a web-search (SERP) provider. Web search during agent sessions will not work until this is set up.",
       },
       connector: {
         title: "SQL Connector",
-        description: "Enable your agent to be able to leverage SQL to answer you questions by connecting to various SQL database providers.",
-        p: "Your database connections"
-      }
+        description:
+          "Enable your agent to be able to leverage SQL to answer you questions by connecting to various SQL database providers.",
+        p: "Your database connections",
+      },
     },
   },
 
@@ -392,12 +393,14 @@ const TRANSLATIONS = {
   support: {
     speech_to_text: {
       title: "Speech-to-text Preference",
-      description: "Here you can specify what kind of text-to-speech and speech-to-text providers you would want to use in your bajajcodes experience. By default, we use the browser's built in support for these services, but you may want to use others."
+      description:
+        "Here you can specify what kind of text-to-speech and speech-to-text providers you would want to use in your bajajcodes experience. By default, we use the browser's built in support for these services, but you may want to use others.",
     },
     text_to_speech: {
       title: "Text-to-speech Preference",
-      description: "Here you can specify what kind of text-to-speech providers you would want to use in your bajajcodes experience. By default, we use the browser's built in support for these services, but you may want to use others."
-    }
+      description:
+        "Here you can specify what kind of text-to-speech providers you would want to use in your bajajcodes experience. By default, we use the browser's built in support for these services, but you may want to use others.",
+    },
   },
 
   transcription: {
@@ -534,8 +537,10 @@ const TRANSLATIONS = {
     vector: "Vector Database",
     anonymous: {
       title: "Anonymous Telemetry Enabled",
-      eventTagsDescription: "All events do not record IP-address and contain no identifying content, settings, chats, or other non-usage based information. To see the list of event tags collected you can look on",
-      telemetryOptOutDescription: "As an open-source project we respect your right to privacy. We are dedicated to building the best solution for integrating AI and documents privately and securely. If you do decide to turn off telemetry all we ask is to consider sending us feedback and thoughts so that we can continue to improve bajajcodes for you."
+      eventTagsDescription:
+        "All events do not record IP-address and contain no identifying content, settings, chats, or other non-usage based information. To see the list of event tags collected you can look on",
+      telemetryOptOutDescription:
+        "As an open-source project we respect your right to privacy. We are dedicated to building the best solution for integrating AI and documents privately and securely. If you do decide to turn off telemetry all we ask is to consider sending us feedback and thoughts so that we can continue to improve bajajcodes for you.",
     },
   },
 };

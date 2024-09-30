@@ -106,8 +106,7 @@ const TRANSLATIONS = {
     },
     upload: {
       title: "Haz clic para subir o arrastra y suelta",
-      description:
-        "¡Soporta archivos de texto, CSV, hojas de cálculo, archivos de audio, y más!",
+      description: "Admite archivos de texto, PDF, imágenes y documentos DOCX",
     },
     info: "Estos archivos se subirán al procesador de documentos que se ejecuta en esta instancia de LLM. Estos archivos no se envían ni se comparten con terceros.",
   },

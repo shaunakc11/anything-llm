@@ -158,7 +158,7 @@ export default function DocumentSettings({
     if (systemSettings?.EmbeddingEngine === "openai") {
       const COST_PER_TOKEN =
         MODEL_COSTS[
-          systemSettings?.EmbeddingModelPref || "text-embedding-ada-002"
+        systemSettings?.EmbeddingModelPref || "text-embedding-ada-002"
         ];
 
       const dollarAmount = (totalTokenCount / 1000) * COST_PER_TOKEN;
@@ -201,10 +201,12 @@ export default function DocumentSettings({
     setWorkspaceDocs(newWorkspaceDocs);
     setSelectedItems({});
 
-    showToast(
-      `Cannot Save and Embed ${cannotMoveItmes.length} items`,
-      "warning"
-    );
+    if (cannotMoveItmes.length > 0) {
+      showToast(
+        `Cannot Save and Embed ${cannotMoveItmes.length} items`,
+        "warning"
+      );
+    }
   };
 
   return (

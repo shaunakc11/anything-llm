@@ -13,7 +13,6 @@ import SettingsButton from "../SettingsButton";
 import ActiveWorkspaces from "./ActiveWorkspaces";
 import UploadedDocuments from "./UploadDocuments";
 import { useUploadedModel } from "./UploadDocuments/useUploadedModel";
-
 export default function Sidebar() {
   const { user } = useUser();
   const { t } = useTranslation();
@@ -123,7 +122,6 @@ export function SidebarMobileHeader() {
     }
     handleBg();
   }, [showSidebar]);
-
   return (
     <>
       <div
@@ -153,11 +151,10 @@ export function SidebarMobileHeader() {
         className={`z-99 fixed top-0 left-0 transition-all duration-500 w-[100vw] h-[100vh]`}
       >
         <div
-          className={`${
-            showBgOverlay
+          className={`${showBgOverlay
               ? "transition-all opacity-1"
               : "transition-none opacity-0"
-          }  duration-500 fixed top-0 left-0 ${USER_BACKGROUND_COLOR} bg-opacity-75 w-screen h-screen`}
+            }  duration-500 fixed top-0 left-0 ${USER_BACKGROUND_COLOR} bg-opacity-75 w-screen h-screen`}
           onClick={() => setShowSidebar(false)}
         />
         <div

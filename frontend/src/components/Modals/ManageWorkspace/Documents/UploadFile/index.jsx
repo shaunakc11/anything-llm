@@ -1,32 +1,39 @@
 import { CloudArrowUp } from "@phosphor-icons/react";
-import debounce from "lodash.debounce";
-import { useEffect, useRef, useState } from "react";
-import { useDropzone } from "react-dropzone";
-import { useTranslation } from "react-i18next";
-import { v4 } from "uuid";
-import System from "../../../../../models/system";
-import Workspace from "../../../../../models/workspace";
+import { useEffect, useState } from "react";
 import showToast from "../../../../../utils/toast";
+import System from "../../../../../models/system";
+import { useDropzone } from "react-dropzone";
+import { v4 } from "uuid";
 import FileUploadProgress from "./FileUploadProgress";
+import Workspace from "../../../../../models/workspace";
+import debounce from "lodash.debounce";
+import { useTranslation } from "react-i18next";
 
-//TODO: remove upload by year
 export default function UploadFile({
   workspace,
   fetchKeys,
   setLoading,
   setLoadingMessage,
-  isUploadedDoc = true,
 }) {
   const [ready, setReady] = useState(false);
   const [files, setFiles] = useState([]);
   const [fetchingUrl, setFetchingUrl] = useState(false);
-  const [year, setYear] = useState("");
-  const [showModal, setShowModal] = useState(false);
-  const [dragFiles, setDragFiles] = useState([]);
-  const [manualSelection, setManualSelection] = useState(false);
-  const fileInputRef = useRef(null);
 
   const { t } = useTranslation();
+
+  const ALLOWED_EXTENSIONS = [
+    "pdf",
+    "png",
+    "jpg",
+    "jpeg",
+    "txt",
+    "docx",
+    "md",
+    "html",
+  ];
+  const ALLOWED_EXTENSIONS_STRING = ALLOWED_EXTENSIONS.map(
+    (ext) => `.${ext}`
+  ).join(", ");
 
   const handleSendLink = async (e) => {
     e.preventDefault();
@@ -51,21 +58,27 @@ export default function UploadFile({
   };
 
   // Don't spam fetchKeys, wait 1s between calls at least.
-  const handleUploadSuccess = () => {
-    debounce(() => fetchKeys(true), 1000);
-    setShowModal(false);
-    setYear("");
-  };
-  const handleUploadError = (_msg) => null;
+  const handleUploadSuccess = debounce(() => fetchKeys(true), 1000);
+  const handleUploadError = (_msg) => null; // stubbed.
 
   const onDrop = async (acceptedFiles, rejections) => {
-    setShowModal(true);
-    const newAccepted = acceptedFiles.map((file) => {
-      return {
-        uid: v4(),
-        file,
-      };
+    const newAccepted = acceptedFiles
+      .filter((file) => {
+        const fileExtension = file.name.split(".").pop().toLowerCase();
+        return ALLOWED_EXTENSIONS.includes(fileExtension);
+      })
+      .map((file) => {
+        return {
+          uid: v4(),
+          file,
+        };
+      });
+
+    const fileRejected = acceptedFiles.filter((file) => {
+      const fileExtension = file.name.split(".").pop().toLowerCase();
+      return !ALLOWED_EXTENSIONS.includes(fileExtension);
     });
+
     const newRejected = rejections.map((file) => {
       return {
         uid: v4(),
@@ -74,13 +87,10 @@ export default function UploadFile({
         reason: file.errors[0].code,
       };
     });
-    if (manualSelection) {
-      setShowModal(false);
-      setManualSelection(false);
-      setFiles([...newAccepted, ...newRejected]);
-    } else {
-      setShowModal(true);
-      setDragFiles([...newAccepted, ...newRejected]);
+    setFiles([...newAccepted, ...newRejected]);
+
+    if (fileRejected.length > 0) {
+      showToast(`unsupported file types`, "error");
     }
   };
 
@@ -96,55 +106,21 @@ export default function UploadFile({
     onDrop,
     disabled: !ready,
   });
-  const handleYearSubmit = () => {
-    const yearNum = parseInt(year, 10);
-    if (year && year.length === 4 && yearNum > 2000 && !isNaN(yearNum)) {
-      setShowModal(false);
-      setYear("");
-      if (!manualSelection) {
-        setFiles((prevFiles) => [...prevFiles, ...dragFiles]);
-      }
-      showToast(
-        `Year ${year} submitted. You can now upload a file.`,
-        "success"
-      );
-      setDragFiles([]);
-      if (manualSelection) {
-        fileInputRef.current.click();
-      }
-    } else {
-      showToast("Please enter a valid 4-digit year greater than 2000", "error");
-    }
-  };
-
-  const modalClick = () => {
-    setManualSelection(true);
-    setShowModal(true);
-  };
-
-  const handleYearCancel = () => {
-    setShowModal(false);
-    setManualSelection(false);
-    setYear("");
-  };
-
-  useEffect(() => {
-    if (files.length > 0 || dragFiles.length > 0) {
-      fileInputRef.current.value = "";
-    }
-  }, [files, dragFiles]);
 
   return (
-    <div className="flex flex-col items-center">
+    <div>
       <div
-        className={`w-[280px] border-2 border-dashed rounded-2xl bg-zinc-900/50 p-3 ${
-          ready ? "cursor-pointer" : "cursor-not-allowed"
-        } hover:bg-zinc-900/90`}
-        {...getRootProps()}
-        onClick={modalClick}
-        style={{ minWidth: !isUploadedDoc ? "41.3rem" : "3rem" }}
+        className={`w-[560px] border-2 border-dashed rounded-2xl bg-zinc-900/50 p-3 ${ready ? "cursor-pointer" : "cursor-not-allowed"
+          } hover:bg-zinc-900/90`}
+        {...getRootProps({
+          accept: ALLOWED_EXTENSIONS_STRING,
+        })}
       >
-        <input {...getInputProps()} ref={fileInputRef} />
+        <input
+          {...getInputProps({
+            accept: ALLOWED_EXTENSIONS_STRING,
+          })}
+        />
         {ready === false ? (
           <div className="flex flex-col items-center justify-center h-full">
             <CloudArrowUp className="w-8 h-8 text-white/80" />
@@ -170,7 +146,6 @@ export default function UploadFile({
             {files.map((file) => (
               <FileUploadProgress
                 key={file.uid}
-                year={year}
                 file={file.file}
                 uuid={file.uid}
                 setFiles={setFiles}
@@ -186,51 +161,10 @@ export default function UploadFile({
           </div>
         )}
       </div>
-      {showModal && (
-        <div className="fixed w-full h-full z-30 inset-0 bg-black bg-opacity-75 flex items-center justify-center">
-          <div
-            className="bg-zinc-800 rounded-lg p-6 w-[400px] border border-gray-500"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <h2 className="text-white text-lg font-semibold mb-4">
-              Upload by year
-            </h2>
-            <input
-              type="number"
-              placeholder="Enter Year (e.g., 2024)"
-              value={year}
-              onChange={(e) => setYear(e.target.value)}
-              className="disabled:bg-zinc-600 disabled:text-slate-300 bg-zinc-900 text-white placeholder:text-white/20 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-            />
-            <div className="flex justify-end mt-6 space-x-3">
-              <button
-                onClick={handleYearSubmit}
-                className="px-4 py-2 text-white hover:bg-switch-selected hover:bg-opacity-60 bg-switch-selected shadow-md rounded-lg"
-              >
-                Submit
-              </button>
-              <button
-                onClick={handleYearCancel}
-                className="px-4 py-2 text-white bg-zinc-900 shadow-md rounded-lg hover:bg-opacity-60"
-              >
-                Cancel
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      <div className="text-center text-white text-opacity-50 text-xs font-medium w-[280px] py-2">
+      <div className="text-center text-white text-opacity-50 text-xs font-medium w-[560px] py-2">
         or submit a link
       </div>
-      <form
-        onSubmit={handleSendLink}
-        className="flex gap-x-2"
-        style={{
-          width: !isUploadedDoc ? "40rem" : "17.5rem",
-          justifyContent: "center",
-        }}
-      >
+      <form onSubmit={handleSendLink} className="flex gap-x-2">
         <input
           disabled={fetchingUrl}
           name="link"
@@ -247,7 +181,7 @@ export default function UploadFile({
           {fetchingUrl ? "Fetching..." : "Fetch website"}
         </button>
       </form>
-      <div className="mt-6 text-center text-white text-opacity-80 text-xs font-medium w-[280px]">
+      <div className="mt-6 text-center text-white text-opacity-80 text-xs font-medium w-[560px]">
         {t("modal.info")}
       </div>
     </div>
