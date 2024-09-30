@@ -103,7 +103,7 @@ export default function DocumentSettings({
     setHighlightWorkspace(false);
     await Workspace.modifyEmbeddings(workspace.slug, changesToSend)
       .then((res) => {
-        if (!!res.message) {
+        if (res.message) {
           showToast(`Error: ${res.message}`, "error", { clear: true });
           return;
         }
@@ -121,6 +121,8 @@ export default function DocumentSettings({
     await fetchKeys(true);
     setLoading(false);
     setLoadingMessage("");
+    //TODO: replace reload with state changes
+    window.location.reload();
   };
 
   const moveSelectedItemsToWorkspace = () => {
@@ -128,13 +130,18 @@ export default function DocumentSettings({
     setHasChanges(true);
 
     const newMovedItems = [];
+    const cannotMoveItmes = [];
 
     for (const itemId of Object.keys(selectedItems)) {
       for (const folder of availableDocs.items) {
         const foundItem = folder.items.find((file) => file.id === itemId);
         if (foundItem) {
-          newMovedItems.push({ ...foundItem, folderName: folder.name });
-          break;
+          if (foundItem?.pageContentUrl) {
+            newMovedItems.push({ ...foundItem, folderName: folder.name });
+            break;
+          } else {
+            cannotMoveItmes.push(itemId);
+          }
         }
       }
     }
@@ -193,10 +200,15 @@ export default function DocumentSettings({
     setAvailableDocs(newAvailableDocs);
     setWorkspaceDocs(newWorkspaceDocs);
     setSelectedItems({});
+
+    showToast(
+      `Cannot Save and Embed ${cannotMoveItmes.length} items`,
+      "warning"
+    );
   };
 
   return (
-    <div className="flex upload-modal -mt-6 z-10 relative">
+    <div className="flex upload-modal -mt-6 z-10 relative px-10">
       <Directory
         files={availableDocs}
         setFiles={setAvailableDocs}
