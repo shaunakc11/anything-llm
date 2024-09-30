@@ -121,7 +121,7 @@ export default function DocumentSettings({
     await fetchKeys(true);
     setLoading(false);
     setLoadingMessage("");
-    //TODO: replace reload with state changes
+    //TODO: replace reload with state changes @bajajcodes
     window.location.reload();
   };
 

@@ -215,9 +215,8 @@ function Directory({
         </div>
 
         <div
-          className={`relative bg-zinc-900 rounded-2xl overflow-x-auto ${
-            isUploadedDoc ? "h-[600px] w-[50vw]" : "h-[310px] w-full"
-          }`}
+          className={`relative bg-zinc-900 rounded-2xl overflow-x-auto ${isUploadedDoc ? "h-[600px] w-[50vw]" : "h-[310px] w-full"
+            }`}
         >
           <div className="w-max absolute top-0 left-0 right-0 z-10 rounded-t-2xl text-white/80 text-xs flex gap-3 p-4 border-b border-white/20 shadow-lg bg-zinc-900">
             <p className="text-center w-44">Name</p>
@@ -229,9 +228,8 @@ function Directory({
           </div>
 
           <div
-            className={`overflow-y-auto h-full ${
-              filteredFiles.length > 0 ? "w-max" : "w-full"
-            } pt-12`}
+            className={`overflow-y-auto h-full ${filteredFiles.length > 0 ? "w-max" : "w-full"
+              } pt-12`}
           >
             {loading ? (
               <div className="absolute w-full h-full flex items-center justify-center flex-col gap-y-5">
@@ -271,14 +269,16 @@ function Directory({
             <div className="absolute bottom-[12px] left-0 right-0 flex justify-center pointer-events-none">
               <div className="mx-auto bg-white/40 rounded-lg py-1 px-2 pointer-events-auto">
                 <div className="flex flex-row items-center gap-x-2">
-                  <button
-                    onClick={moveToWorkspace}
-                    onMouseEnter={() => setHighlightWorkspace(true)}
-                    onMouseLeave={() => setHighlightWorkspace(false)}
-                    className="border-none text-sm font-semibold bg-white h-[30px] px-2.5 rounded-lg hover:text-white hover:bg-neutral-800/80"
-                  >
-                    Move to Workspace
-                  </button>
+                  {!isUploadedDoc && (
+                    <button
+                      onClick={moveToWorkspace}
+                      onMouseEnter={() => setHighlightWorkspace(true)}
+                      onMouseLeave={() => setHighlightWorkspace(false)}
+                      className="border-none text-sm font-semibold bg-white h-[30px] px-2.5 rounded-lg hover:text-white hover:bg-neutral-800/80"
+                    >
+                      Move to Workspace
+                    </button>
+                  )}
                   <div className="relative">
                     <button
                       onClick={() =>
