@@ -3,7 +3,7 @@ const { SUPPORTED_FILETYPE_CONVERTERS } = require("../utils/constants");
 
 //TODO: remove unused variables
 async function processSingleFile(targetFilename, uploadedFile, options = {}) {
-  const fileExtension = path.parse(uploadedFile.title).ext;
+  const fileExtension = path.parse(uploadedFile.title).ext.toLowerCase();
 
   if (!fileExtension) {
     return {
