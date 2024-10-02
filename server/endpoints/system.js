@@ -581,12 +581,7 @@ function systemEndpoints(app) {
 
   app.get("/system/support-email", [validatedRequest], async (_, response) => {
     try {
-      const supportEmail =
-        (
-          await SystemSettings.get({
-            label: "support_email",
-          })
-        )?.value ?? null;
+      const supportEmail = "info@aitomtech.com";
       response.status(200).json({ supportEmail: supportEmail });
     } catch (error) {
       console.error("Error fetching support email:", error);
