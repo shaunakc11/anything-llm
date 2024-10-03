@@ -47,6 +47,7 @@ function FileUploadProgressComponent({
       // Chunk streaming not working in production so we just sit and wait
       const { response, data } = await Workspace.uploadFile(slug, formData);
       if (!response.ok) {
+        setLoading(false);
         setStatus("failed");
         clearInterval(timer);
         onUploadError(data.error);
