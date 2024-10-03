@@ -24,8 +24,8 @@ const WorkspaceUser = {
         userIds.map((userId) =>
           prisma.workspace_users.create({
             data: {
-              user_id: Number(userId),
-              workspace_id: Number(workspaceId),
+              user_id: userId,
+              workspace_id: workspaceId,
             },
           })
         )
@@ -39,7 +39,7 @@ const WorkspaceUser = {
   create: async function (userId = 0, workspaceId = 0) {
     try {
       await prisma.workspace_users.create({
-        data: { user_id: Number(userId), workspace_id: Number(workspaceId) },
+        data: { user_id: userId, workspace_id: workspaceId },
       });
       return true;
     } catch (error) {

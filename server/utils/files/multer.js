@@ -66,6 +66,108 @@ function handleFileUpload(request, response, next) {
       const { originalname, buffer } = request.file;
       console.log(`-- Working ${originalname} --`);
 
+      if (buffer.length === 0) {
+        return response.status(500).json({
+          success: false,
+          error: "Provided file did not have any content.",
+        });
+      }
+
+      // check if the file is corrupted
+      async function validateFile(buffer, originalName) {
+        const fileExtension = originalName.split('.').pop().toLowerCase();
+
+        let isValid;
+        switch (fileExtension) {
+          case 'pdf':
+            isValid = await isPdfValid(buffer);
+            break;
+          case 'jpg':
+          case 'jpeg':
+          case 'png':
+            isValid = await isImageValid(buffer);
+            break;
+          case 'txt':
+          case 'md':
+            isValid = isTextFileValid(buffer);
+            break;
+          case 'docx':
+            isValid = await isDocxValid(buffer);
+            break;
+          default:
+            return {
+              success: false,
+              error: `Unsupported file type: .${fileExtension}`,
+            };
+        }
+
+        if (!isValid) {
+          return {
+            success: false,
+            error: 'Corrupted File.',
+          };
+        }
+
+        return { success: true };
+      }
+
+      async function isPdfValid(buffer) {
+        try {
+          await PDFDocument.load(buffer);
+          return true;
+        } catch {
+          return false;
+        }
+      }
+
+      async function isImageValid(buffer) {
+        try {
+          await sharp(buffer).metadata();
+          return true;
+        } catch {
+          return false;
+        }
+      }
+
+      function isTextFileValid(buffer) {
+        try {
+          const content = buffer.toString('utf-8');
+          return content.length > 0;
+        } catch {
+          return false;
+        }
+      }
+
+      async function isDocxValid(buffer) {
+        try {
+          await mammoth.extractRawText({ buffer });
+          return true;
+        } catch {
+          return false;
+        }
+      }
+
+      async function processFile(buffer, originalName) {
+        const validationResult = await validateFile(buffer, originalName);
+        if (!validationResult.success) {
+          return {
+            success: false,
+            error: 'Corrupted File.',
+          };
+        }
+
+        return { success: true, message: 'File is valid.' };
+      }
+      const result = await processFile(buffer, originalname);
+
+      if (!result.success) {
+        return response.status(500).json({
+          success: false,
+          error: 'The provided file was corrupted.',
+        });
+      }
+
+
       const uuid = v4();
       const uniqueFilename = `${uuid}-${originalname}`;
 

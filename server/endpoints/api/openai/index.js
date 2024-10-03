@@ -308,7 +308,7 @@ function apiOpenAICompatibleEndpoints(app) {
             name: workspace.name,
             file_counts: {
               total: await Document.count({
-                workspaceId: Number(workspace.id),
+                workspaceId: workspace.id,
               }),
             },
             provider: VectorDBProvider,

@@ -86,7 +86,7 @@ function adminEndpoints(app) {
         const currUser = await userFromSession(request, response);
         const { id } = request.params;
         const updates = reqBody(request);
-        const user = await User.get({ id: Number(id) });
+        const user = await User.get({ id: id });
 
         const canModify = validCanModify(currUser, user);
         if (!canModify.valid) {
@@ -126,7 +126,7 @@ function adminEndpoints(app) {
       try {
         const currUser = await userFromSession(request, response);
         const { id } = request.params;
-        const user = await User.get({ id: Number(id) });
+        const user = await User.get({ id: id });
 
         const canModify = validCanModify(currUser, user);
         if (!canModify.valid) {
@@ -134,7 +134,7 @@ function adminEndpoints(app) {
           return;
         }
 
-        await User.delete({ id: Number(id) });
+        await User.delete({ id: id });
         await EventLogs.logEvent(
           "user_deleted",
           {
@@ -287,16 +287,16 @@ function adminEndpoints(app) {
       try {
         const { id } = request.params;
         const VectorDb = getVectorDbClass();
-        const workspace = await Workspace.get({ id: Number(id) });
+        const workspace = await Workspace.get({ id: id });
         if (!workspace) {
           response.sendStatus(404).end();
           return;
         }
 
-        await WorkspaceChats.delete({ workspaceId: Number(workspace.id) });
-        await DocumentVectors.deleteForWorkspace(Number(workspace.id));
-        await Document.delete({ workspaceId: Number(workspace.id) });
-        await Workspace.delete({ id: Number(workspace.id) });
+        await WorkspaceChats.delete({ workspaceId: workspace.id });
+        await DocumentVectors.deleteForWorkspace(Numbeworkspace.id);
+        await Document.delete({ workspaceId: workspace.id });
+        await Workspace.delete({ id: workspace.id });
         try {
           await VectorDb["delete-namespace"]({ namespace: workspace.slug });
         } catch (e) {
@@ -431,7 +431,7 @@ function adminEndpoints(app) {
     async (request, response) => {
       try {
         const { id } = request.params;
-        await ApiKey.delete({ id: Number(id) });
+        await ApiKey.delete({ id: id });
 
         await EventLogs.logEvent(
           "api_key_deleted",

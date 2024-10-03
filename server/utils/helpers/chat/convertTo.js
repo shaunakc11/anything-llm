@@ -82,7 +82,7 @@ async function prepareWorkspaceChatsForExport(format = "jsonl") {
   const workspaceIds = [...new Set(chats.map((chat) => chat.workspaceId))];
 
   const workspacesWithPrompts = await Promise.all(
-    workspaceIds.map((id) => Workspace.get({ id: Number(id) }))
+    workspaceIds.map((id) => Workspace.get({ id: id }))
   );
 
   const workspacePromptsMap = workspacesWithPrompts.reduce((acc, workspace) => {

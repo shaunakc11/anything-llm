@@ -47,9 +47,9 @@ const EmbedConfig = {
             data?.max_chats_per_session,
             "max_chats_per_session"
           ),
-          createdBy: Number(creatorId) ?? null,
+          createdBy: creatorId ?? null,
           workspace: {
-            connect: { id: Number(data.workspace_id) },
+            connect: { id: data.workspace_id },
           },
         },
       });
@@ -75,7 +75,7 @@ const EmbedConfig = {
 
     try {
       await prisma.embed_configs.update({
-        where: { id: Number(embedId) },
+        where: { id: embedId },
         data: updates,
       });
       return { success: true, error: null };

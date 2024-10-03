@@ -82,7 +82,7 @@ function apiWorkspaceThreadEndpoints(app) {
 
         const { thread, message } = await WorkspaceThread.new(
           workspace,
-          userId ? Number(userId) : null
+          userId ? userId : null
         );
 
         await Telemetry.sendTelemetry("workspace_thread_created", {
@@ -404,7 +404,7 @@ function apiWorkspaceThreadEndpoints(app) {
           return;
         }
 
-        const user = userId ? await User.get({ id: Number(userId) }) : null;
+        const user = userId ? await User.get({ id: userId }) : null;
         const result = await chatWithWorkspace(
           workspace,
           message,
@@ -547,7 +547,7 @@ function apiWorkspaceThreadEndpoints(app) {
           return;
         }
 
-        const user = userId ? await User.get({ id: Number(userId) }) : null;
+        const user = userId ? await User.get({ id: userId }) : null;
 
         response.setHeader("Cache-Control", "no-cache");
         response.setHeader("Content-Type", "text/event-stream");

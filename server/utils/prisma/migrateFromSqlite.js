@@ -113,8 +113,8 @@ async function migrateData() {
         data: {
           secret: row.secret,
           ...(legacyUserId
-            ? { createdBy: Number(legacyUserId) }
-            : { createdBy: Number(row.createdBy) }),
+            ? { createdBy: legacyUserId }
+            : { createdBy: row.createdBy }),
           createdAt: new Date(row.createdAt),
           lastUpdatedAt: new Date(row.lastUpdatedAt),
         },
@@ -135,11 +135,11 @@ async function migrateData() {
           code: row.code,
           status: row.status,
           ...(legacyClaimedUserId
-            ? { claimedBy: Number(legacyClaimedUserId) }
-            : { claimedBy: Number(row.claimedBy) }),
+            ? { claimedBy: legacyClaimedUserId }
+            : { claimedBy: row.claimedBy }),
           ...(legacyCreatedUserId
-            ? { createdBy: Number(legacyCreatedUserId) }
-            : { createdBy: Number(row.createdBy) }),
+            ? { createdBy: legacyCreatedUserId }
+            : { createdBy: row.createdBy }),
           createdAt: new Date(row.createdAt),
           lastUpdatedAt: new Date(row.lastUpdatedAt),
         },
@@ -158,7 +158,7 @@ async function migrateData() {
           filename: row.filename,
           docpath: row.docpath,
           ...(legacyWorkspaceId
-            ? { workspaceId: Number(legacyWorkspaceId) }
+            ? { workspaceId: legacyWorkspaceId }
             : {}),
           metadata: row.metadata,
           createdAt: new Date(row.createdAt),
@@ -204,8 +204,8 @@ async function migrateData() {
 
       return prisma.workspace_users.create({
         data: {
-          user_id: Number(legacyUserId),
-          workspace_id: Number(legacyWorkspaceId),
+          user_id: legacyUserId,
+          workspace_id: legacyWorkspaceId,
           createdAt: new Date(row.createdAt),
           lastUpdatedAt: new Date(row.lastUpdatedAt),
         },
@@ -223,11 +223,11 @@ async function migrateData() {
 
       return prisma.workspace_chats.create({
         data: {
-          workspaceId: Number(legacyWorkspaceId),
+          workspaceId: legacyWorkspaceId,
           prompt: row.prompt,
           response: row.response,
           include: row.include === 1,
-          ...(legacyUserId ? { user_id: Number(legacyUserId) } : {}),
+          ...(legacyUserId ? { user_id: legacyUserId } : {}),
           createdAt: new Date(row.createdAt),
           lastUpdatedAt: new Date(row.lastUpdatedAt),
         },

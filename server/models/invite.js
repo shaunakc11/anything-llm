@@ -26,7 +26,7 @@ const Invite = {
   deactivate: async function (inviteId = null) {
     try {
       await prisma.invites.update({
-        where: { id: Number(inviteId) },
+        where: { id: inviteId },
         data: { status: "disabled" },
       });
       return { success: true, error: null };
@@ -39,7 +39,7 @@ const Invite = {
   markClaimed: async function (inviteId = null, user) {
     try {
       const invite = await prisma.invites.update({
-        where: { id: Number(inviteId) },
+        where: { id: inviteId },
         data: { status: "claimed", claimedBy: user.id },
       });
 
@@ -51,7 +51,7 @@ const Invite = {
             (workspace) => workspace.id
           );
           const ids = safeJsonParse(invite.workspaceIds)
-            .map((id) => Number(id))
+            .map((id) => id)
             .filter((id) => workspaceIds.includes(id));
           if (ids.length !== 0) await WorkspaceUser.createMany(user.id, ids);
         }

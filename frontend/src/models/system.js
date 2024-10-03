@@ -193,11 +193,11 @@ const System = {
         return false;
       });
   },
-  deleteDocuments: async (names = []) => {
+  deleteDocuments: async (files = []) => {
     return await fetch(`${API_BASE}/system/remove-documents`, {
       method: "DELETE",
       headers: baseHeaders(),
-      body: JSON.stringify({ names }),
+      body: JSON.stringify({ files }),
     })
       .then((res) => res.ok)
       .catch((e) => {

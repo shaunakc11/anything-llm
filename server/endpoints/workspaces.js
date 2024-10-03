@@ -271,8 +271,8 @@ function workspaceEndpoints(app) {
           message:
             failedToEmbed.length > 0
               ? `${failedToEmbed.length} documents failed to add.\n\n${errors
-                  .map((msg) => `${msg}`)
-                  .join("\n\n")}`
+                .map((msg) => `${msg}`)
+                .join("\n\n")}`
               : null,
         });
       } catch (e) {
@@ -299,10 +299,10 @@ function workspaceEndpoints(app) {
           return;
         }
 
-        await WorkspaceChats.delete({ workspaceId: Number(workspace.id) });
+        await WorkspaceChats.delete({ workspaceId: workspace.id });
         await DocumentVectors.deleteForWorkspace(workspace.id);
-        await Document.delete({ workspaceId: Number(workspace.id) });
-        await Workspace.delete({ id: Number(workspace.id) });
+        await Document.delete({ workspaceId: workspace.id });
+        await Workspace.delete({ id: workspace.id });
 
         await EventLogs.logEvent(
           "workspace_deleted",
@@ -343,7 +343,7 @@ function workspaceEndpoints(app) {
         }
 
         await DocumentVectors.deleteForWorkspace(workspace.id);
-        await Document.delete({ workspaceId: Number(workspace.id) });
+        await Document.delete({ workspaceId: workspace.id });
 
         await EventLogs.logEvent(
           "workspace_vectors_reset",
@@ -448,7 +448,7 @@ function workspaceEndpoints(app) {
         // we simplify this by just looking at workspace<>user overlap
         // since they are all on the same table.
         await WorkspaceChats.delete({
-          id: { in: chatIds.map((id) => Number(id)) },
+          id: { in: chatIds.map((id) => id) },
           user_id: user?.id ?? null,
           workspaceId: workspace.id,
         });
@@ -474,7 +474,7 @@ function workspaceEndpoints(app) {
           workspaceId: workspace.id,
           thread_id: null,
           user_id: user?.id,
-          id: { gte: Number(startingId) },
+          id: { gte: startingId },
         });
 
         response.sendStatus(200).end();
@@ -500,7 +500,7 @@ function workspaceEndpoints(app) {
           workspaceId: workspace.id,
           thread_id: null,
           user_id: user?.id,
-          id: Number(chatId),
+          id: chatId,
         });
         if (!existingChat) throw new Error("Invalid chat.");
 
@@ -530,7 +530,7 @@ function workspaceEndpoints(app) {
         const { chatId } = request.params;
         const { feedback = null } = reqBody(request);
         const existingChat = await WorkspaceChats.get({
-          id: Number(chatId),
+          id: chatId,
           workspaceId: response.locals.workspace.id,
         });
 
@@ -634,7 +634,7 @@ function workspaceEndpoints(app) {
         const workspace = response.locals.workspace;
         const cacheKey = `${workspace.slug}:${chatId}`;
         const wsChat = await WorkspaceChats.get({
-          id: Number(chatId),
+          id: chatId,
           workspaceId: workspace.id,
         });
 
@@ -819,11 +819,11 @@ function workspaceEndpoints(app) {
         // and is a valid thread slug.
         const threadId = !!threadSlug
           ? (
-              await WorkspaceThread.get({
-                slug: String(threadSlug),
-                workspace_id: workspace.id,
-              })
-            )?.id ?? null
+            await WorkspaceThread.get({
+              slug: String(threadSlug),
+              workspace_id: workspace.id,
+            })
+          )?.id ?? null
           : null;
         const chatsToFork = await WorkspaceChats.where(
           {
@@ -831,7 +831,7 @@ function workspaceEndpoints(app) {
             user_id: user?.id,
             include: true, // only duplicate visible chats
             thread_id: threadId,
-            id: { lte: Number(chatId) },
+            id: { lte: chatId },
           },
           null,
           { id: "asc" }
@@ -887,7 +887,7 @@ function workspaceEndpoints(app) {
         const { id } = request.params;
         const user = await userFromSession(request, response);
         const validChat = await WorkspaceChats.get({
-          id: Number(id),
+          id: id,
           user_id: user?.id ?? null,
         });
         if (!validChat)

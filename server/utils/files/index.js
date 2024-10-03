@@ -140,9 +140,9 @@ async function viewLocalFiles() {
         });
         const watchedInWorkspaces = liveSyncAvailable
           ? await Document.getOnlyWorkspaceIds({
-              docpath: cachefilename,
-              watched: true,
-            })
+            docpath: cachefilename,
+            watched: true,
+          })
           : [];
 
         subdocs.items.push({
@@ -273,9 +273,23 @@ async function storeVectorResult(vectorData = [], filename = null) {
 }
 
 // Purges a file from the documents/ folder.
-async function purgeSourceDocument(filename = null) {
-  if (!filename) return;
-  const filePath = path.resolve(documentsPath, normalizePath(filename));
+async function purgeSourceDocument(file = null) {
+  if (!file) return;
+  const filePath = path.resolve(documentsPath, normalizePath(file.name));
+
+  const files = await prisma.file.findMany({
+    where: {
+      id: file.id,
+    },
+  });
+
+  if (files.length > 0) {
+    await prisma.file.deleteMany({
+      where: {
+        id: file.id
+      }
+    })
+  }
 
   if (
     !fs.existsSync(filePath) ||
@@ -284,7 +298,7 @@ async function purgeSourceDocument(filename = null) {
   )
     return;
 
-  console.log(`Purging source document of ${filename}.`);
+  console.log(`Purging source document of ${file.name}.`);
   fs.rmSync(filePath);
   return;
 }
@@ -364,7 +378,7 @@ function hasVectorCachedFiles() {
       fs.readdirSync(vectorCachePath)?.filter((name) => name.endsWith(".json"))
         .length !== 0
     );
-  } catch {}
+  } catch { }
   return false;
 }
 

@@ -46,8 +46,8 @@ const SlashCommandPresets = {
           // the UID field enforces the @@unique(userId, command) constraint since
           // the real relational field (userId) cannot be non-null so this 'dummy' field gives us something
           // to constrain against within the context of prisma and sqlite that works.
-          uid: userId ? Number(userId) : 0,
-          userId: userId ? Number(userId) : null,
+          uid: userId ? userId : 0,
+          userId: userId ? userId : null,
         },
       });
       return preset;
@@ -79,7 +79,7 @@ const SlashCommandPresets = {
   update: async function (presetId = null, presetData = {}) {
     try {
       const preset = await prisma.slash_command_presets.update({
-        where: { id: Number(presetId) },
+        where: { id: presetId },
         data: presetData,
       });
       return preset;
@@ -92,7 +92,7 @@ const SlashCommandPresets = {
   delete: async function (presetId = null) {
     try {
       await prisma.slash_command_presets.delete({
-        where: { id: Number(presetId) },
+        where: { id: presetId },
       });
       return true;
     } catch (error) {

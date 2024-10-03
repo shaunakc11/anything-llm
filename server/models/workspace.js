@@ -208,7 +208,7 @@ const Workspace = {
       const workspaces = await this.where(clause, limit, orderBy);
       for (const workspace of workspaces) {
         const userIds = (
-          await WorkspaceUser.where({ workspace_id: Number(workspace.id) })
+          await WorkspaceUser.where({ workspace_id: workspace.id })
         ).map((rel) => rel.user_id);
         workspace.userIds = userIds;
       }
@@ -222,7 +222,7 @@ const Workspace = {
   workspaceUsers: async function (workspaceId) {
     try {
       const users = (
-        await WorkspaceUser.where({ workspace_id: Number(workspaceId) })
+        await WorkspaceUser.where({ workspace_id: workspaceId })
       ).map((rel) => rel);
 
       const usersById = await User.where({
@@ -248,7 +248,7 @@ const Workspace = {
 
   updateUsers: async function (workspaceId, userIds = []) {
     try {
-      await WorkspaceUser.delete({ workspace_id: Number(workspaceId) });
+      await WorkspaceUser.delete({ workspace_id: workspaceId });
       await WorkspaceUser.createManyUsers(userIds, workspaceId);
       return { success: true, error: null };
     } catch (error) {

@@ -38,13 +38,13 @@ const chatHistory = {
               prompt: prev.content,
               response: last.content,
             });
-          } catch {}
+          } catch { }
         });
       },
       _store: async function (aibitat, { prompt, response } = {}) {
         const invocation = aibitat.handlerProps.invocation;
         await WorkspaceChats.new({
-          workspaceId: Number(invocation.workspace_id),
+          workspaceId: invocation.workspace_id,
           prompt,
           response: {
             text: response,
@@ -61,7 +61,7 @@ const chatHistory = {
       ) {
         const invocation = aibitat.handlerProps.invocation;
         await WorkspaceChats.new({
-          workspaceId: Number(invocation.workspace_id),
+          workspaceId: invocation.workspace_id,
           prompt,
           response: {
             sources: options?.sources ?? [],

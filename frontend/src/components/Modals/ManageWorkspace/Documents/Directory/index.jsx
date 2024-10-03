@@ -60,7 +60,7 @@ function Directory({
         for (const folder of files.items) {
           const foundItem = folder.items.find((file) => file.id === itemId);
           if (foundItem) {
-            toRemove.push(`${folder.name}/${foundItem.name}`);
+            toRemove.push({ id: foundItem.id, name: `${folder.name}/${foundItem.name}` });
             break;
           }
         }

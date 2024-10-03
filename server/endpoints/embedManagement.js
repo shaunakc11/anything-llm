@@ -74,7 +74,7 @@ function embedManagementEndpoints(app) {
     async (request, response) => {
       try {
         const { embedId } = request.params;
-        await EmbedConfig.delete({ id: Number(embedId) });
+        await EmbedConfig.delete({ id: embedId });
         await EventLogs.logEvent(
           "embed_deleted",
           { embedId },
@@ -116,7 +116,7 @@ function embedManagementEndpoints(app) {
     async (request, response) => {
       try {
         const { chatId } = request.params;
-        await EmbedChats.delete({ id: Number(chatId) });
+        await EmbedChats.delete({ id: chatId });
         response.status(200).json({ success: true, error: null });
       } catch (e) {
         console.error(e);

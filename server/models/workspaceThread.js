@@ -11,7 +11,7 @@ const WorkspaceThread = {
         data: {
           name: this.defaultName,
           slug: uuidv4(),
-          user_id: userId ? Number(userId) : null,
+          user_id: userId ? userId : null,
           workspace_id: workspace.id,
         },
       });

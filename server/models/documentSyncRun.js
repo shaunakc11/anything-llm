@@ -16,7 +16,7 @@ const DocumentSyncRun = {
 
       const run = await prisma.document_sync_executions.create({
         data: {
-          queueId: Number(queueId),
+          queueId: queueId,
           status: String(status),
           result: JSON.stringify(result),
         },

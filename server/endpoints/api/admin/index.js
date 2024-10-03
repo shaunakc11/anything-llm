@@ -196,7 +196,7 @@ function apiAdminEndpoints(app) {
 
       const { id } = request.params;
       const updates = reqBody(request);
-      const user = await User.get({ id: Number(id) });
+      const user = await User.get({ id: id });
       const validAdminRoleModification = await canModifyAdmin(user, updates);
 
       if (!validAdminRoleModification.valid) {
@@ -257,7 +257,7 @@ function apiAdminEndpoints(app) {
         }
 
         const { id } = request.params;
-        const user = await User.get({ id: Number(id) });
+        const user = await User.get({ id: id });
         await User.delete({ id: user.id });
         await EventLogs.logEvent("api_user_deleted", {
           userName: user.username,

@@ -26,8 +26,7 @@ function fetchPfp(pfpPath) {
 }
 
 async function determinePfpFilepath(id) {
-  const numberId = Number(id);
-  const user = await User.get({ id: numberId });
+  const user = await User.get({ id: id });
   const pfpFilename = user?.pfpFilename || null;
   if (!pfpFilename) return null;
 

@@ -30,7 +30,7 @@ function setConnectionMeta(request, response, next) {
 async function validEmbedConfigId(request, response, next) {
   const { embedId } = request.params;
 
-  const embed = await EmbedConfig.get({ id: Number(embedId) });
+  const embed = await EmbedConfig.get({ id: embedId });
   if (!embed) {
     response.sendStatus(404).end();
     return;

@@ -189,10 +189,10 @@ function workspaceThreadEndpoints(app) {
         const thread = response.locals.thread;
 
         await WorkspaceChats.delete({
-          workspaceId: Number(workspace.id),
-          thread_id: Number(thread.id),
+          workspaceId: workspace.id,
+          thread_id: thread.id,
           user_id: user?.id,
-          id: { gte: Number(startingId) },
+          id: { gte: startingId },
         });
 
         response.sendStatus(200).end();
@@ -223,7 +223,7 @@ function workspaceThreadEndpoints(app) {
           workspaceId: workspace.id,
           thread_id: thread.id,
           user_id: user?.id,
-          id: Number(chatId),
+          id: chatId,
         });
         if (!existingChat) throw new Error("Invalid chat.");
 

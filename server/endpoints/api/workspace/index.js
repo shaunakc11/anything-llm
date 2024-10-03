@@ -205,7 +205,7 @@ function apiWorkspaceEndpoints(app) {
           return;
         }
 
-        const workspaceId = Number(workspace.id);
+        const workspaceId = workspace.id;
         await WorkspaceChats.delete({ workspaceId: workspaceId });
         await DocumentVectors.deleteForWorkspace(workspaceId);
         await Document.delete({ workspaceId: workspaceId });
@@ -437,7 +437,7 @@ function apiWorkspaceEndpoints(app) {
         await Document.removeDocuments(currWorkspace, deletes);
         await Document.addDocuments(currWorkspace, adds);
         const updatedWorkspace = await Workspace.get({
-          id: Number(currWorkspace.id),
+          id: currWorkspace.id,
         });
         response.status(200).json({ workspace: updatedWorkspace });
       } catch (e) {

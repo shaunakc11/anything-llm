@@ -338,8 +338,8 @@ function systemEndpoints(app) {
     [validatedRequest, flexUserRoleValid([ROLES.admin, ROLES.manager])],
     async (request, response) => {
       try {
-        const { names } = reqBody(request);
-        for await (const name of names) await purgeDocument(name);
+        const { files } = reqBody(request);
+        for await (const file of files) await purgeDocument(file);
         response.sendStatus(200).end();
       } catch (e) {
         console.error(e.message, e);
@@ -997,9 +997,8 @@ function systemEndpoints(app) {
     async (request, response) => {
       try {
         const { id } = request.params;
-        Number(id) === -1
-          ? await WorkspaceChats.delete({}, true)
-          : await WorkspaceChats.delete({ id: Number(id) });
+        id ? await WorkspaceChats.delete({}, true)
+          : await WorkspaceChats.delete({ id: id });
         response.json({ success: true, error: null });
       } catch (e) {
         console.error(e);
@@ -1038,7 +1037,7 @@ function systemEndpoints(app) {
     try {
       const sessionUser = await userFromSession(request, response);
       const { username, password } = reqBody(request);
-      const id = Number(sessionUser.id);
+      const id = sessionUser.id;
 
       if (!id) {
         response.status(400).json({ success: false, error: "Invalid user ID" });
@@ -1122,7 +1121,7 @@ function systemEndpoints(app) {
         // Valid user running owns the preset if user session is valid.
         const ownsPreset = await SlashCommandPresets.get({
           userId: user?.id ?? null,
-          id: Number(slashCommandId),
+          id: slashCommandId,
         });
         if (!ownsPreset)
           return response.status(404).json({ message: "Preset not found" });
@@ -1134,7 +1133,7 @@ function systemEndpoints(app) {
         };
 
         const preset = await SlashCommandPresets.update(
-          Number(slashCommandId),
+          slashCommandId,
           updates
         );
         if (!preset) return response.sendStatus(422);
@@ -1157,14 +1156,14 @@ function systemEndpoints(app) {
         // Valid user running owns the preset if user session is valid.
         const ownsPreset = await SlashCommandPresets.get({
           userId: user?.id ?? null,
-          id: Number(slashCommandId),
+          id: slashCommandId,
         });
         if (!ownsPreset)
           return response
             .status(403)
             .json({ message: "Failed to delete preset" });
 
-        await SlashCommandPresets.delete(Number(slashCommandId));
+        await SlashCommandPresets.delete(slashCommandId);
         response.sendStatus(204);
       } catch (error) {
         console.error("Error deleting slash command preset:", error);

@@ -12,7 +12,7 @@ const EmbedChats = {
       const chat = await prisma.embed_chats.create({
         data: {
           prompt,
-          embed_id: Number(embedId),
+          embed_id: embedId,
           response: JSON.stringify(response),
           connection_information: JSON.stringify(connection_information),
           session_id: sessionId,

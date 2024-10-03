@@ -9,15 +9,16 @@ const {
 } = require(".");
 const { Document } = require("../../models/documents");
 const { Workspace } = require("../../models/workspace");
+const prisma = require("../prisma");
 
-async function purgeDocument(filename = null) {
-  if (!filename || !normalizePath(filename)) return;
+async function purgeDocument(file = null) {
+  if (!file || !normalizePath(file.name)) return;
 
-  await purgeVectorCache(filename);
-  await purgeSourceDocument(filename);
+  await purgeVectorCache(file.name);
+  await purgeSourceDocument(file);
   const workspaces = await Workspace.where();
   for (const workspace of workspaces) {
-    await Document.removeDocuments(workspace, [filename]);
+    await Document.removeDocuments(workspace, [file.name]);
   }
   return;
 }
@@ -25,6 +26,26 @@ async function purgeDocument(filename = null) {
 async function purgeFolder(folderName = null) {
   if (!folderName) return;
   const subFolder = normalizePath(folderName);
+  if (subFolder === 'custom-documents') {
+    console.log("Skipping deletion of 'custom-documents' folder.");
+  } else {
+    // Delete the folder if it's not "custom-documents"
+    const folder = await prisma.folder.findUnique({
+      where: {
+        name: subFolder,
+      },
+    });
+
+    if (folder) {
+      // Deleting the folder
+      await prisma.folder.delete({
+        where: {
+          name: subFolder,
+        },
+      });
+      console.log(`Folder "${folderName}" deleted.`);
+    }
+  }
   const subFolderPath = path.resolve(documentsPath, subFolder);
   const validRemovableSubFolders = fs
     .readdirSync(documentsPath)
