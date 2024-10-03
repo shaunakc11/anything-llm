@@ -9,6 +9,7 @@ const TRANSLATIONS = {
     save: "Save changes",
     previous: "Previous Page",
     next: "Next Page",
+    nameInvalid: "Enter a valid name",
   },
   //Dashboard items
   dashboard: {

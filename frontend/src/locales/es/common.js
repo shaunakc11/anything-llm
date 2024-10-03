@@ -9,6 +9,7 @@ const TRANSLATIONS = {
     save: "Guardar cambios",
     previous: "Página anterior",
     next: "Página siguiente",
+    nameInvalid: "Ingrese un nombre válido.",
   },
 
   dashboard: {

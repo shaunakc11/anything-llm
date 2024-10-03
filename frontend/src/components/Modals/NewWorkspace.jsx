@@ -10,12 +10,24 @@ export default function NewWorkspaceModal({ hideModal = noop }) {
   const { t } = useTranslation();
   const formEl = useRef(null);
   const [error, setError] = useState(null);
+
+  const isValidName = (name) => {
+    const regex = /^[a-zA-Z0-9]+$/; // Only allows alphanumeric characters
+    return regex.test(name);
+  };
+
   const handleCreate = async (e) => {
     setError(null);
     e.preventDefault();
     const data = {};
     const form = new FormData(formEl.current);
     for (var [key, value] of form.entries()) data[key] = value;
+
+    if (!isValidName(data.name)) {
+      setError(t("common.nameInvalid"));
+      return;
+    }
+
     const { workspace, message } = await Workspace.new(data);
     if (workspace) {
       window.location.href = paths.workspace.chat(workspace.slug);
