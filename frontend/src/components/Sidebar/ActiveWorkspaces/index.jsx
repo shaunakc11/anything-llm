@@ -20,25 +20,6 @@ import ManageWorkspace, {
 import ThreadContainer from "./ThreadContainer";
 import { useTranslation } from "react-i18next";
 
-function groupWorkspacesByYear(workspaces) {
-  const groupedWorkspaces = workspaces.reduce((acc, item) => {
-    const year = new Date(item.createdAt).getFullYear().toString();
-    if (!acc[year]) {
-      acc[year] = [];
-    }
-    acc[year].push(item);
-    return acc;
-  }, {});
-
-  // Sort years in descending order
-  return Object.keys(groupedWorkspaces)
-    .sort((a, b) => b - a)
-    .reduce((acc, year) => {
-      acc[year] = groupedWorkspaces[year];
-      return acc;
-    }, {});
-}
-
 export default function ActiveWorkspaces() {
   const { t } = useTranslation();
   const { slug } = useParams();
@@ -55,6 +36,17 @@ export default function ActiveWorkspaces() {
   const isInWorkspaceSettings = !!useMatch("/workspace/:slug/settings/:tab");
   const activeWorkspaceRef = useRef(null);
 
+  function groupWorkspacesByYear(workspaces) {
+    return workspaces.reduce((acc, workspace) => {
+      const year = workspace.year;
+      if (!acc[year]) {
+        acc[year] = [];
+      }
+      acc[year].push(workspace);
+      return acc;
+    }, {});
+  }
+
   useEffect(() => {
     async function getWorkspaces() {
       const workspaces = await Workspace.all();
@@ -63,7 +55,10 @@ export default function ActiveWorkspaces() {
       setGroupedWorkspaces(groupedWorkspaces);
       const initialExpandedState = Object.keys(groupedWorkspaces).reduce(
         (acc, year) => {
-          acc[year] = true;
+          const isActiveYear = groupedWorkspaces[year].some(
+            (workspace) => workspace.slug === slug
+          );
+          acc[year] = isActiveYear; // Expand only the active workspace's year
           return acc;
         },
         {}
@@ -164,168 +159,170 @@ export default function ActiveWorkspaces() {
             {t("dashboard.notFound")}
           </div>
         ) : (
-          Object.entries(filteredGroupedWorkspaces).map(
-            ([year, workspaces]) => {
-              const isExpanded = expandedYears[year];
-              return (
-                <div
-                  key={year}
-                  className="flex flex-col w-full gap-y-2"
-                  role="listitem"
-                >
+          Object.entries(filteredGroupedWorkspaces)
+            .sort((a, b) => b - a)
+            .map(
+              ([year, workspaces]) => {
+                const isExpanded = expandedYears[year];
+                return (
                   <div
-                    className="flex items-center gap-4 text-[14px] leading-loose whitespace-nowrap overflow-hidden text-white cursor-pointer"
-                    onClick={() => toggleYear(year)}
+                    key={year}
+                    className="flex flex-col w-full gap-y-2"
+                    role="listitem"
                   >
-                    <span className="font-medium">{year}</span>
-                    <div className="w-5 h-5 text-muted-foreground transition-transform">
-                      {isExpanded ? (
-                        <CaretDown size={20} />
-                      ) : (
-                        <CaretRight size={20} />
-                      )}
+                    <div
+                      className="flex items-center gap-4 text-[14px] leading-loose whitespace-nowrap overflow-hidden text-white cursor-pointer"
+                      onClick={() => toggleYear(year)}
+                    >
+                      <span className="font-medium">{year}</span>
+                      <div className="w-5 h-5 text-muted-foreground transition-transform">
+                        {isExpanded ? (
+                          <CaretDown size={20} />
+                        ) : (
+                          <CaretRight size={20} />
+                        )}
+                      </div>
                     </div>
-                  </div>
-                  {isExpanded && (
-                    <div className="flex flex-col gap-y-2">
-                      {workspaces.map((workspace) => {
-                        const isActive = workspace.slug === slug;
-                        const isHovered = hoverStates[workspace.id];
-                        return (
-                          <div
-                            className="flex flex-col w-full"
-                            onMouseEnter={() => handleMouseEnter(workspace.id)}
-                            onMouseLeave={() => handleMouseLeave(workspace.id)}
-                            key={workspace.id}
-                            ref={isActive ? activeWorkspaceRef : null}
-                            role="listitem"
-                          >
+                    {isExpanded && (
+                      <div className="flex flex-col gap-y-2">
+                        {workspaces.map((workspace) => {
+                          const isActive = workspace.slug === slug;
+                          const isHovered = hoverStates[workspace.id];
+                          return (
                             <div
+                              className="flex flex-col w-full"
+                              onMouseEnter={() => handleMouseEnter(workspace.id)}
+                              onMouseLeave={() => handleMouseLeave(workspace.id)}
                               key={workspace.id}
-                              className="flex gap-x-2 items-center justify-between"
+                              ref={isActive ? activeWorkspaceRef : null}
+                              role="listitem"
                             >
-                              <a
-                                href={
-                                  isActive
-                                    ? null
-                                    : paths.workspace.chat(workspace.slug)
-                                }
-                                aria-current={isActive ? "page" : ""}
-                                className={`
+                              <div
+                                key={workspace.id}
+                                className="flex gap-x-2 items-center justify-between"
+                              >
+                                <a
+                                  href={
+                                    isActive
+                                      ? null
+                                      : paths.workspace.chat(workspace.slug)
+                                  }
+                                  aria-current={isActive ? "page" : ""}
+                                  className={`
                     transition-all duration-[200ms]
                       flex flex-grow w-[75%] gap-x-2 py-[6px] px-[12px] rounded-[4px] text-white justify-start items-center
                       hover:bg-workspace-item-selected-gradient hover:font-bold border-2 border-outline
                       ${isActive
-                                    ? "bg-workspace-item-selected-gradient font-bold"
-                                    : ""
-                                  }`}
-                              >
-                                <div className="flex flex-row justify-between w-full">
-                                  <div className="flex items-center space-x-2">
-                                    <SquaresFour
-                                      weight={isActive ? "fill" : "regular"}
-                                      className="flex-shrink-0"
-                                      size={24}
-                                    />
-                                    <p
-                                      className={`text-[14px] leading-loose whitespace-nowrap overflow-hidden ${isActive
+                                      ? "bg-workspace-item-selected-gradient font-bold"
+                                      : ""
+                                    }`}
+                                >
+                                  <div className="flex flex-row justify-between w-full">
+                                    <div className="flex items-center space-x-2">
+                                      <SquaresFour
+                                        weight={isActive ? "fill" : "regular"}
+                                        className="flex-shrink-0"
+                                        size={24}
+                                      />
+                                      <p
+                                        className={`text-[14px] leading-loose whitespace-nowrap overflow-hidden ${isActive
                                           ? "text-white "
                                           : "text-zinc-200"
-                                        }`}
-                                    >
-                                      {isActive || isHovered
-                                        ? truncate(workspace.name, 15)
-                                        : truncate(workspace.name, 20)}
-                                    </p>
-                                  </div>
-                                  {(isActive ||
-                                    isHovered ||
-                                    gearHover[workspace.id]) &&
-                                    user?.role !== "default" ? (
-                                    <div className="flex items-center gap-x-[2px]">
-                                      <div
-                                        className={`flex hover:bg-[#646768] p-[2px] rounded-[4px] text-[#A7A8A9] hover:text-white ${uploadHover[workspace.id]
-                                            ? "bg-[#646768]"
-                                            : ""
                                           }`}
                                       >
-                                        <button
+                                        {isActive || isHovered
+                                          ? truncate(workspace.name, 15)
+                                          : truncate(workspace.name, 20)}
+                                      </p>
+                                    </div>
+                                    {(isActive ||
+                                      isHovered ||
+                                      gearHover[workspace.id]) &&
+                                      user?.role !== "default" ? (
+                                      <div className="flex items-center gap-x-[2px]">
+                                        <div
+                                          className={`flex hover:bg-[#646768] p-[2px] rounded-[4px] text-[#A7A8A9] hover:text-white ${uploadHover[workspace.id]
+                                            ? "bg-[#646768]"
+                                            : ""
+                                            }`}
+                                        >
+                                          <button
+                                            type="button"
+                                            onClick={(e) => {
+                                              e.preventDefault();
+                                              setSelectedWs(workspace);
+                                              showModal();
+                                            }}
+                                            onMouseEnter={() =>
+                                              handleUploadMouseEnter(workspace.id)
+                                            }
+                                            onMouseLeave={() =>
+                                              handleUploadMouseLeave(workspace.id)
+                                            }
+                                            className="rounded-md flex items-center justify-center ml-auto"
+                                          >
+                                            <UploadSimple
+                                              className="h-[20px] w-[20px]"
+                                              weight="bold"
+                                            />
+                                          </button>
+                                        </div>
+
+                                        <Link
                                           type="button"
-                                          onClick={(e) => {
-                                            e.preventDefault();
-                                            setSelectedWs(workspace);
-                                            showModal();
-                                          }}
+                                          to={
+                                            isInWorkspaceSettings
+                                              ? paths.workspace.chat(
+                                                workspace.slug
+                                              )
+                                              : paths.workspace.settings.generalAppearance(
+                                                workspace.slug
+                                              )
+                                          }
                                           onMouseEnter={() =>
-                                            handleUploadMouseEnter(workspace.id)
+                                            handleGearMouseEnter(workspace.id)
                                           }
                                           onMouseLeave={() =>
-                                            handleUploadMouseLeave(workspace.id)
+                                            handleGearMouseLeave(workspace.id)
                                           }
-                                          className="rounded-md flex items-center justify-center ml-auto"
+                                          className="rounded-md flex items-center justify-center text-[#A7A8A9] hover:text-white ml-auto"
+                                          aria-label="General appearance settings"
                                         >
-                                          <UploadSimple
-                                            className="h-[20px] w-[20px]"
-                                            weight="bold"
-                                          />
-                                        </button>
+                                          <div className="flex hover:bg-[#646768] p-[2px] rounded-[4px]">
+                                            <GearSix
+                                              color={
+                                                isInWorkspaceSettings &&
+                                                  workspace.slug === slug
+                                                  ? "#46C8FF"
+                                                  : gearHover[workspace.id]
+                                                    ? "#FFFFFF"
+                                                    : "#A7A8A9"
+                                              }
+                                              weight="bold"
+                                              className="h-[20px] w-[20px]"
+                                            />
+                                          </div>
+                                        </Link>
                                       </div>
-
-                                      <Link
-                                        type="button"
-                                        to={
-                                          isInWorkspaceSettings
-                                            ? paths.workspace.chat(
-                                              workspace.slug
-                                            )
-                                            : paths.workspace.settings.generalAppearance(
-                                              workspace.slug
-                                            )
-                                        }
-                                        onMouseEnter={() =>
-                                          handleGearMouseEnter(workspace.id)
-                                        }
-                                        onMouseLeave={() =>
-                                          handleGearMouseLeave(workspace.id)
-                                        }
-                                        className="rounded-md flex items-center justify-center text-[#A7A8A9] hover:text-white ml-auto"
-                                        aria-label="General appearance settings"
-                                      >
-                                        <div className="flex hover:bg-[#646768] p-[2px] rounded-[4px]">
-                                          <GearSix
-                                            color={
-                                              isInWorkspaceSettings &&
-                                                workspace.slug === slug
-                                                ? "#46C8FF"
-                                                : gearHover[workspace.id]
-                                                  ? "#FFFFFF"
-                                                  : "#A7A8A9"
-                                            }
-                                            weight="bold"
-                                            className="h-[20px] w-[20px]"
-                                          />
-                                        </div>
-                                      </Link>
-                                    </div>
-                                  ) : null}
-                                </div>
-                              </a>
+                                    ) : null}
+                                  </div>
+                                </a>
+                              </div>
+                              {isActive && (
+                                <ThreadContainer
+                                  workspace={workspace}
+                                  isActive={isActive}
+                                />
+                              )}
                             </div>
-                            {isActive && (
-                              <ThreadContainer
-                                workspace={workspace}
-                                isActive={isActive}
-                              />
-                            )}
-                          </div>
-                        );
-                      })}
-                    </div>
-                  )}
-                </div>
-              );
-            }
-          )
+                          );
+                        })}
+                      </div>
+                    )}
+                  </div>
+                );
+              }
+            )
         )}
       </div>
       {showing && (
